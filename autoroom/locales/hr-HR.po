@@ -1,0 +1,956 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2022-01-27 09:43+0100\n"
+"PO-Revision-Date: 2022-01-27 11:01+0100\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: redgettext 3.3\n"
+"X-Generator: Poedit 3.0\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Language: hr_HR\n"
+
+#: autoroom/autoroom.py:19
+msgid ""
+"This allows the metaclass used for proper type detection to coexist with "
+"discord.py's metaclass."
+msgstr ""
+
+#: autoroom/autoroom.py:29
+msgid ""
+"Automatic voice channel management.\n"
+"\n"
+"    This cog facilitates automatic voice channel creation.\n"
+"    When a member joins an AutoRoom Source (voice channel),\n"
+"    this cog will move them to a brand new AutoRoom that they have control "
+"over.\n"
+"    Once everyone leaves the AutoRoom, it is automatically deleted.\n"
+"\n"
+"    For a quick rundown on how to get started with this cog,\n"
+"    check out [the readme](https://github.com/PhasecoreX/PCXCogs/tree/master/"
+"autoroom/README.md)\n"
+"    "
+msgstr ""
+
+#: autoroom/autoroom.py:85
+msgid "Set up the cog."
+msgstr ""
+
+#: autoroom/autoroom.py:114
+msgid "Show version in help."
+msgstr ""
+
+#: autoroom/autoroom.py:116
+msgid ""
+"{pre_processed}\n"
+"\n"
+"Cog Version: {version}"
+msgstr ""
+"{pre_processed}\n"
+"\n"
+"Verzija modula: {version}"
+
+#: autoroom/autoroom.py:123
+msgid "Nothing to delete."
+msgstr ""
+
+#: autoroom/autoroom.py:131
+msgid "Perform setup actions before loading cog."
+msgstr ""
+
+#: autoroom/autoroom.py:136
+msgid "Perform some configuration migrations."
+msgstr ""
+
+#: autoroom/autoroom.py:263
+msgid "Remove non-existent AutoRooms from the config."
+msgstr ""
+
+#: autoroom/autoroom.py:281 autoroom/autoroom.py:314
+msgid "AutoRoom: Associated voice channel deleted."
+msgstr ""
+
+#: autoroom/autoroom.py:291
+msgid ""
+"Clean up config when an AutoRoom (or Source) is deleted (either by the bot "
+"or the user)."
+msgstr ""
+
+#: autoroom/autoroom.py:320
+msgid "Do voice channel stuff when users move about channels."
+msgstr ""
+
+#: autoroom/autoroom.py:343
+msgid "Create a voice channel for a member in an AutoRoom Source channel."
+msgstr ""
+
+#: autoroom/autoroom.py:360
+msgid ""
+"Hello there! It looks like you're trying to make an AutoRoom.\n"
+"Please note that you are only allowed to make **{rate}** AutoRooms every "
+"**{time}**.\n"
+"You can try again in **{remaining_time}**."
+msgstr ""
+
+#: autoroom/autoroom.py:451
+msgid "AutoRoom: New AutoRoom needed."
+msgstr ""
+
+#: autoroom/autoroom.py:462
+msgid "AutoRoom: Move user to new AutoRoom."
+msgstr ""
+
+#: autoroom/autoroom.py:494
+msgid "AutoRoom: New text channel needed."
+msgstr ""
+
+#: autoroom/autoroom.py:513
+msgid "Delete AutoRoom if empty."
+msgstr ""
+
+#: autoroom/autoroom.py:519
+msgid "AutoRoom: Channel empty."
+msgstr ""
+
+#: autoroom/autoroom.py:526
+msgid ""
+"Allow or deny a user access to the text channel associated to an AutoRoom."
+msgstr ""
+
+#: autoroom/autoroom.py:551 autoroom/c_autoroom.py:370
+msgid "AutoRoom: Permission change"
+msgstr ""
+
+#: autoroom/autoroom.py:560
+msgid ""
+"Return a channel name with an incrementing number appended to it, based on a "
+"formatting string."
+msgstr ""
+
+#: autoroom/autoroom.py:600
+msgid "Return a dict of template data based on a member."
+msgstr ""
+
+#: autoroom/autoroom.py:609
+msgid ""
+"Return a formatted channel name, taking into account the 100 character "
+"channel name limit."
+msgstr ""
+
+#: autoroom/autoroom.py:617
+msgid ""
+"Check if a member (or role) is an admin (role).\n"
+"\n"
+"        Also takes into account if the setting is enabled.\n"
+"        "
+msgstr ""
+
+#: autoroom/autoroom.py:629
+msgid ""
+"Check if a member (or role) is a mod (role).\n"
+"\n"
+"        Also takes into account if the setting is enabled.\n"
+"        "
+msgstr ""
+
+#: autoroom/autoroom.py:650
+msgid ""
+"Check if the permissions in an AutoRoom Source and a destination category "
+"are sufficient."
+msgstr ""
+
+#: autoroom/autoroom.py:687
+msgid "Required on Source Voice Channel"
+msgstr ""
+
+#: autoroom/autoroom.py:693
+msgid "Required on Destination Category"
+msgstr ""
+
+#: autoroom/autoroom.py:701
+msgid "Required in Guild"
+msgstr ""
+
+#: autoroom/autoroom.py:709
+msgid "Optional on Destination Category (for text channel)"
+msgstr ""
+
+#: autoroom/autoroom.py:725
+msgid ""
+"\n"
+"{status_emoji} Source VC: {autoroom_source} -> Dest Category: "
+"{category_dest}\n"
+"{permissions}"
+msgstr ""
+
+#: autoroom/autoroom.py:766
+msgid "Optional on Destination Category (for source clone)"
+msgstr ""
+
+#: autoroom/autoroom.py:775
+msgid ""
+"Return a dict of all autoroom source configs, cleaning up any invalid ones."
+msgstr ""
+
+#: autoroom/autoroom.py:797
+msgid "Return the config for an autoroom source, or None if not set up yet."
+msgstr ""
+
+#: autoroom/autoroom.py:808
+msgid ""
+"Get info for an AutoRoom, or None if the voice channel isn't an AutoRoom."
+msgstr ""
+
+#: autoroom/autoroom.py:820
+msgid ""
+"Check if a member/role is allowed to view and connect to a voice channel."
+msgstr ""
+
+#: autoroom/autoroom.py:853
+msgid "Get member roles set on an AutoRoom Source."
+msgstr ""
+
+#: autoroom/c_autoroom.py:17
+msgid "The autoroom command."
+msgstr ""
+
+#: autoroom/c_autoroom.py:22
+msgid ""
+"Manage your AutoRoom.\n"
+"\n"
+"        For a quick rundown on how to manage your AutoRoom,\n"
+"        check out [the readme](https://github.com/PhasecoreX/PCXCogs/tree/"
+"master/autoroom/README.md)\n"
+"        "
+msgstr ""
+
+#: autoroom/c_autoroom.py:30 autoroom/c_autoroomset.py:39
+msgid "Display current settings."
+msgstr ""
+
+#: autoroom/c_autoroom.py:37
+msgid "Room Settings"
+msgstr ""
+
+#: autoroom/c_autoroom.py:41
+msgid "Owner"
+msgstr ""
+
+#: autoroom/c_autoroom.py:46
+msgid "Mode"
+msgstr ""
+
+#: autoroom/c_autoroom.py:47
+msgid "Server Managed"
+msgstr ""
+
+#: autoroom/c_autoroom.py:62
+msgid "custom"
+msgstr ""
+
+#: autoroom/c_autoroom.py:70
+msgid ", only certain roles"
+msgstr ""
+
+#: autoroom/c_autoroom.py:71
+msgid "Access"
+msgstr ""
+
+#: autoroom/c_autoroom.py:74 autoroom/c_autoroomset.py:82
+msgid "Member Roles"
+msgstr ""
+
+#: autoroom/c_autoroom.py:77
+msgid "Bitrate"
+msgstr ""
+
+#: autoroom/c_autoroom.py:79
+msgid "Channel Age"
+msgstr ""
+
+#: autoroom/c_autoroom.py:85
+msgid "Current Access Settings"
+msgstr ""
+
+#: autoroom/c_autoroom.py:108
+msgid "Allowed Members"
+msgstr ""
+
+#: autoroom/c_autoroom.py:113
+msgid "Allowed Roles"
+msgstr ""
+
+#: autoroom/c_autoroom.py:117
+msgid "Denied Members"
+msgstr ""
+
+#: autoroom/c_autoroom.py:122
+msgid "Denied Roles"
+msgstr ""
+
+#: autoroom/c_autoroom.py:129
+msgid "Change the name of your AutoRoom."
+msgstr ""
+
+#: autoroom/c_autoroom.py:142
+msgid ""
+"{message_author}, you can only modify an AutoRoom name **{rate}** times "
+"every **{time}** with this command. You can try again in **{remaining_time}"
+"**.\n"
+"\n"
+"Alternatively, you can modify the channel yourself by either right clicking "
+"the channel on desktop or by long pressing it on mobile."
+msgstr ""
+
+#: autoroom/c_autoroom.py:159
+msgid ""
+" Do note that since this server has 2FA enabled, you will need it enabled on "
+"your account to modify the channel in this way."
+msgstr ""
+
+#: autoroom/c_autoroom.py:168 autoroom/c_autoroom.py:183
+#: autoroom/c_autoroom.py:198
+msgid "AutoRoom: User edit room info"
+msgstr ""
+
+#: autoroom/c_autoroom.py:175
+msgid "Change the bitrate of your AutoRoom."
+msgstr ""
+
+#: autoroom/c_autoroom.py:190
+msgid "Change the user limit of your AutoRoom."
+msgstr ""
+
+#: autoroom/c_autoroom.py:205
+msgid "Make your AutoRoom public."
+msgstr ""
+
+#: autoroom/c_autoroom.py:210
+msgid "Lock your AutoRoom (visible, but no one can join)."
+msgstr ""
+
+#: autoroom/c_autoroom.py:215
+msgid "Make your AutoRoom private."
+msgstr ""
+
+#: autoroom/c_autoroom.py:222
+msgid "Allow a user (or role) into your AutoRoom."
+msgstr ""
+
+#: autoroom/c_autoroom.py:231
+msgid ""
+"Deny a user (or role) from accessing your AutoRoom.\n"
+"\n"
+"        If the user is already in your AutoRoom, they will be disconnected.\n"
+"\n"
+"        If a user is no longer able to access the room due to denying a "
+"role,\n"
+"        they too will be disconnected. Keep in mind that if the server is "
+"using\n"
+"        member roles, denying roles will probably not work as expected.\n"
+"        "
+msgstr ""
+
+#: autoroom/c_autoroom.py:247
+msgid "AutoRoom: Deny user"
+msgstr ""
+
+#: autoroom/c_autoroom.py:256
+msgid "Actually do channel edit for allow/deny."
+msgstr ""
+
+#: autoroom/c_autoroom.py:264
+msgid ""
+"{message_author}, I do not have the required permissions to do this. Please "
+"let the staff know about this!"
+msgstr ""
+
+#: autoroom/c_autoroom.py:278
+msgid ""
+"{message_author}, it seems like the AutoRoom Source this AutoRoom was made "
+"from no longer exists. Because of that, I can no longer modify this AutoRoom."
+msgstr ""
+
+#: autoroom/c_autoroom.py:307
+msgid "user"
+msgstr ""
+
+#: autoroom/c_autoroom.py:308
+msgid "them"
+msgstr ""
+
+#: autoroom/c_autoroom.py:310
+msgid "role"
+msgstr ""
+
+#: autoroom/c_autoroom.py:311
+msgid "it"
+msgstr ""
+
+#: autoroom/c_autoroom.py:312
+msgid ""
+"since that {user_role} is not allowed to connect to the AutoRoom Source that "
+"this AutoRoom was made from, I can't allow {them_it} here either."
+msgstr ""
+
+#: autoroom/c_autoroom.py:321
+msgid ""
+"this AutoRoom is using member roles, so I can't allow a lower hierarchy role."
+msgstr ""
+
+#: autoroom/c_autoroom.py:330
+msgid "why would I deny myself from entering your AutoRoom?"
+msgstr ""
+
+#: autoroom/c_autoroom.py:334
+msgid "don't be so hard on yourself! This is your AutoRoom!"
+msgstr ""
+
+#: autoroom/c_autoroom.py:338
+msgid ""
+"I don't know if you know this, but that's the server owner... I can't deny "
+"them from entering your AutoRoom."
+msgstr ""
+
+#: autoroom/c_autoroom.py:346
+msgid ""
+"that's an admin{role_suffix}, so I can't deny them from entering your "
+"AutoRoom."
+msgstr ""
+
+#: autoroom/c_autoroom.py:353
+msgid ""
+"that's a moderator{role_suffix}, so I can't deny them from entering your "
+"AutoRoom."
+msgstr ""
+
+#: autoroom/c_autoroom.py:378
+msgid ""
+"Get the members current voice channel, or None if not in a voice channel."
+msgstr ""
+
+#: autoroom/c_autoroom.py:391
+msgid "{message_author}, you are not in an AutoRoom."
+msgstr ""
+
+#: autoroom/c_autoroom.py:402
+msgid " (it is a server AutoRoom)"
+msgstr ""
+
+#: autoroom/c_autoroom.py:405
+msgid ""
+"{message_author}, you are not the owner of this AutoRoom{reason_server}."
+msgstr ""
+
+#: autoroom/c_autoroom.py:420
+msgid ""
+"Get the type of access a role has in an AutoRoom (public, locked, private, "
+"etc)."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:17
+msgid "{{username}}'s Room{% if dupenum > 1 %} ({{dupenum}}){% endif %}"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:18
+msgid ""
+"{{game}}{% if not game %}{{username}}'s Room{% endif %}{% if dupenum > 1 %} "
+"({{dupenum}}){% endif %}"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:25
+msgid "The autoroomset command."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:31
+msgid ""
+"Configure the AutoRoom cog.\n"
+"\n"
+"        For a quick rundown on how to get started with this cog,\n"
+"        check out [the readme](https://github.com/PhasecoreX/PCXCogs/tree/"
+"master/autoroom/README.md)\n"
+"        "
+msgstr ""
+
+#: autoroom/c_autoroomset.py:40
+msgid "Server Settings"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:42
+msgid "Admin access all AutoRooms"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:46
+msgid "Admin access all AutoRoom Text Channels"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:50
+msgid "Moderator access all AutoRooms"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:54
+msgid "Moderator access all AutoRoom Text Channels"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:67
+msgid "Room type"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:71
+msgid "Destination category"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:76
+msgid "Text Channel"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:77
+msgid "True"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:82
+msgid "Member Role"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:85
+msgid "Username"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:92
+msgid "Custom: \"{channel_name_format}\""
+msgstr ""
+
+#: autoroom/c_autoroomset.py:95
+msgid "Room name format"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:102
+msgid ""
+"It looks like I am missing one or more required permissions. Until I have "
+"them, the AutoRoom cog may not function properly for all AutoRoom Sources. "
+"Check `[p]autoroomset permissions` for more information."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:111
+msgid ""
+"It looks like I am missing one or more optional permissions. All AutoRooms "
+"will work, however some features (text channels and cloned source "
+"permissions) may not work. Check `[p]autoroomset permissions` for more "
+"information."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:122
+msgid "Check that the bot has all needed permissions."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:130
+msgid ""
+"Since you have multiple AutoRoom Sources, I need the \"Add Reactions\" "
+"permission to display permission information"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:140
+msgid ""
+"It looks like I am missing one or more required permissions. Until I have "
+"them, the AutoRoom Source(s) in question will not function properly.\n"
+"\n"
+"The easiest way of fixing this is just giving me these permissions as part "
+"of my server role, otherwise you will need to give me these permissions on "
+"the AutoRoom Source and destination category, as specified below."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:153
+msgid ""
+"It looks like I am missing one or more optional permissions. All AutoRooms "
+"will work, however some features (text channels and cloned source "
+"permissions) may not work. \n"
+"\n"
+"The easiest way of fixing this is just giving me these permissions as part "
+"of my server role, otherwise you will need to give me these permissions on "
+"the destination category, as specified below.\n"
+"\n"
+"In the case of optional permissions, any permission on the AutoRoom Source "
+"will be copied to the created AutoRoom, as if we were cloning the AutoRoom "
+"Source. In order for this to work, I need each permission to be allowed in "
+"the destination category (or server). If it isn't allowed, I will skip "
+"copying that permission over."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:170
+msgid "Everything looks good here!"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:185
+msgid "Control access to all AutoRooms."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:189
+msgid "Change Admin access to AutoRooms."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:193
+msgid "Allow Admins to join locked/private AutoRooms."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:198
+msgid ""
+"Admins are {now_or_no_longer} able to join (new) locked/private AutoRooms."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:200 autoroom/c_autoroomset.py:214
+#: autoroom/c_autoroomset.py:232 autoroom/c_autoroomset.py:246
+msgid "now"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:200 autoroom/c_autoroomset.py:214
+#: autoroom/c_autoroomset.py:232 autoroom/c_autoroomset.py:246
+msgid "no longer"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:206
+msgid "Allow Admins to see all AutoRoom Text Channels."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:211
+msgid ""
+"Admins are {now_or_no_longer} able to see all (new) AutoRoom Text Channels."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:221
+msgid "Change Moderator access to AutoRooms."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:225
+msgid "Allow Moderators to join locked/private AutoRooms."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:230
+msgid ""
+"Moderators are {now_or_no_longer} able to join (new) locked/private "
+"AutoRooms."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:238
+msgid "Allow Moderators to see all AutoRoom Text Channels."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:243
+msgid ""
+"Moderators are {now_or_no_longer} able to see all (new) AutoRoom Text "
+"Channels."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:258
+msgid ""
+"Create an AutoRoom Source.\n"
+"\n"
+"        Anyone joining an AutoRoom Source will automatically have a new\n"
+"        voice channel (AutoRoom) created in the destination category,\n"
+"        and then be moved into it.\n"
+"        "
+msgstr ""
+
+#: autoroom/c_autoroomset.py:270
+msgid ""
+"I am missing a permission that the AutoRoom cog requires me to have. Check "
+"below for the permissions I require in both the AutoRoom Source and the "
+"destination category. Try creating the AutoRoom Source again once I have "
+"these permissions.\n"
+"{details}\n"
+"The easiest way of doing this is just giving me these permissions as part of "
+"my server role, otherwise you will need to give me these permissions on the "
+"source channel and destination category, as specified above."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:291
+msgid ""
+"**Welcome to the setup wizard for creating an AutoRoom Source!**\n"
+"Users joining the {source_channel} AutoRoom Source will have an AutoRoom "
+"created in the {dest_category} category and be moved into it.\n"
+"\n"
+"**AutoRoom Type**\n"
+"AutoRooms can be one of the following types when created:\n"
+"`public ` - Visible and joinable by other users. The AutoRoom Owner can kick/"
+"ban users out of them.\n"
+"`locked ` - Visible, but not joinable by other users. The AutoRoom Owner "
+"must allow users into their room.\n"
+"`private` - Not visible or joinable by other users. The AutoRoom Owner must "
+"allow users into their room.\n"
+"`server ` - Same as a public AutoRoom, but with no AutoRoom Owner. No "
+"modifications can be made to the generated AutoRoom.\n"
+"\n"
+"What would you like these created AutoRooms to be by default? (`public`/"
+"`locked`/`private`/`server`)"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:319 autoroom/c_autoroomset.py:359
+#: autoroom/c_autoroomset.py:400
+msgid "No valid answer was received, canceling setup process."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:333
+msgid ""
+"Since you want to have this AutoRoom Source create {room_type} AutoRooms, I "
+"will need a few extra permissions. Try creating the AutoRoom Source again "
+"once I have these permissions.\n"
+"{details}"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:347
+msgid ""
+"**Text Channel**\n"
+"AutoRooms can optionally have a text channel created with them, where only "
+"the AutoRoom members cansee and message in it. This is useful to keep "
+"AutoRoom specific chat out of your other channels.\n"
+"\n"
+"Would you like these created AutoRooms to also have a created text channel? "
+"(`yes`/`no`)"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:374
+msgid ""
+"Since you want to have this AutoRoom Source also create text channels, I "
+"will need a few extra permissions. Until I have these permissions, text "
+"channels will not be created.\n"
+"{details}"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:388
+msgid ""
+"**Channel Name**\n"
+"When an AutoRoom is created, a name will be generated for it. How would you "
+"like that name to be generated?\n"
+"\n"
+"`username` - Shows up as \"{message_author}'s Room\"\n"
+"`game    ` - AutoRoom Owner's playing game, otherwise `username`"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:410
+msgid ""
+"Settings saved successfully!\n"
+"Check out `[p]autoroomset modify` for even more AutoRoom Source settings, or "
+"to make modifications to your above answers."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:424
+msgid "Remove an AutoRoom Source."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:430
+msgid "**{source_channel}** is no longer an AutoRoom Source channel."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:438
+msgid "Modify an existing AutoRoom Source."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:442
+msgid "Choose what type of AutoRoom is created."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:448
+msgid "Rooms will be open to all. AutoRoom Owner has control over room."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:455
+msgid ""
+"Rooms will be visible to all, but not joinable. AutoRoom Owner can allow "
+"users in."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:462
+msgid "Rooms will be hidden. AutoRoom Owner can allow users in."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:469
+msgid ""
+"Rooms will be open to all, but the server owns the AutoRoom (so they can't "
+"be modified)."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:478
+msgid "Save the public/private setting."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:485
+msgid "**{source_channel}** will now create `{room_type}` AutoRooms."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:495 autoroom/c_autoroomset.py:615
+#: autoroom/c_autoroomset.py:649 autoroom/c_autoroomset.py:676
+#: autoroom/c_autoroomset.py:742 autoroom/c_autoroomset.py:769
+msgid "**{source_channel}** is not an AutoRoom Source channel."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:503
+msgid "Set the default name format of an AutoRoom."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:509
+msgid ""
+"Default format: PhasecoreX's Room.\n"
+"\n"
+"        Custom format example:\n"
+"        `{{username}}'s Room{% if dupenum > 1 %} ({{dupenum}}){% endif %}`\n"
+"        "
+msgstr ""
+
+#: autoroom/c_autoroomset.py:520
+msgid ""
+"The users current playing game, otherwise the username format.\n"
+"\n"
+"        Custom format example:\n"
+"        `{{game}}{% if not game %}{{username}}'s Room{% endif %}{% if "
+"dupenum > 1 %} ({{dupenum}}){% endif %}`\n"
+"        "
+msgstr ""
+
+#: autoroom/c_autoroomset.py:535
+msgid ""
+"A custom channel name.\n"
+"\n"
+"        Use `{{ expressions }}` to print variables and `{% statements %}` to "
+"do basic evaluations on variables.\n"
+"\n"
+"        Variables supported:\n"
+"        - `username` - AutoRoom Owner's username\n"
+"        - `game    ` - AutoRoom Owner's game\n"
+"        - `dupenum ` - An incrementing number that starts at 1, useful for "
+"un-duplicating channel names\n"
+"\n"
+"        Statements supported:\n"
+"        - `if/elif/else/endif`\n"
+"        - Example: `{% if dupenum > 1 %}DupeNum is {{dupenum}}, which is "
+"greater than 1{% endif %}`\n"
+"        - Another example: `{% if not game %}User isn't playing a game!{% "
+"endif %}`\n"
+"\n"
+"        It's kinda like Jinja2, but way simpler. Check out [the readme]"
+"(https://github.com/PhasecoreX/PCXCogs/tree/master/autoroom/README.md) for "
+"more info.\n"
+"        "
+msgstr ""
+
+#: autoroom/c_autoroomset.py:560
+msgid "Save the room name type."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:571 autoroom/c_autoroomset.py:711
+msgid ""
+"Hmm... that doesn't seem to be a valid template:\n"
+"\n"
+"`{runtime_error}`\n"
+"\n"
+"If you need some help, take a look at [the readme](https://github.com/"
+"PhasecoreX/PCXCogs/tree/master/autoroom/README.md)."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:592
+msgid ""
+"New AutoRooms created by **{source_channel}** will use the **{room_type}** "
+"format"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:605
+msgid "Example Game"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:606
+msgid ""
+"\n"
+"\n"
+"Example room names:"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:626
+msgid "Manage if a text channel should be created as well."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:634
+msgid "Enable creating a text channel with the AutoRoom."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:641
+msgid ""
+"New AutoRooms created by **{source_channel}** will now get their own text "
+"channel."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:661
+msgid "Disable creating a text channel with the AutoRoom."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:668
+msgid ""
+"New AutoRooms created by **{source_channel}** will no longer get their own "
+"text channel."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:687
+msgid "Configure sending an introductory message to the text channel."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:697
+msgid ""
+"Send a message to the newly generated text channel.\n"
+"\n"
+"        This can have template variables and statements, which you can learn "
+"more\n"
+"        about by looking at `[p]autoroomset modify name custom`, or by "
+"looking at\n"
+"        [the readme](https://github.com/PhasecoreX/PCXCogs/tree/master/"
+"autoroom/README.md).\n"
+"        "
+msgstr ""
+
+#: autoroom/c_autoroomset.py:729
+msgid ""
+"New AutoRooms created by **{source_channel}** will have the following "
+"message sent to their text channel:\n"
+"\n"
+"{message}"
+msgstr ""
+
+#: autoroom/c_autoroomset.py:754
+msgid "Disable sending a message to the newly generated text channel."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:761
+msgid ""
+"New AutoRooms created by **{source_channel}** will no longer have a message "
+"sent to their text channel."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:779
+msgid "Learn how AutoRoom defaults are set."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:782
+msgid ""
+"**Bitrate/User Limit**\n"
+"Default bitrate and user limit settings are copied from the AutoRoom Source "
+"to the resulting AutoRoom.\n"
+"\n"
+"**Member Roles**\n"
+"Only members that can view and join an AutoRoom Source will be able to join "
+"its resulting AutoRooms. If you would like to limit AutoRooms to only allow "
+"certain members, simply deny the everyone role from viewing/connecting to "
+"the AutoRoom Source and allow your member roles to view/connect to it.\n"
+"\n"
+"**Permissions**\n"
+"All permission overwrites (except for Manage Roles) will be copied from the "
+"AutoRoom Source to the resulting AutoRoom. Every permission overwrite you "
+"want copied over, regardless if it is allowed or denied, must be allowed for "
+"the bot. It can either be allowed for the bot in the destination category or "
+"server-wide with the roles it has. `[p]autoroomset permissions` will show "
+"what permissions will be copied over."
+msgstr ""
+
+#: autoroom/c_autoroomset.py:805
+msgid "Check all permissions for all AutoRooms in a guild."
+msgstr ""
