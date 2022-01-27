@@ -5,9 +5,12 @@ from typing import Dict, Union
 import discord
 from redbot.core import commands
 from redbot.core.utils.chat_formatting import error, humanize_timedelta
+from redbot.core.i18n import Translator
 
 from .abc import MixinMeta
 from .pcx_lib import Perms, SettingDisplay, delete
+
+_ = Translator("AutoRoom", __file__)
 
 
 class AutoRoomCommands(MixinMeta):
@@ -31,17 +34,17 @@ class AutoRoomCommands(MixinMeta):
         if not autoroom_info:
             return
 
-        room_settings = SettingDisplay("Room Settings")
+        room_settings = SettingDisplay(_("Room Settings"))
         owner = ctx.guild.get_member(autoroom_info["owner"])
         if owner:
             room_settings.add(
-                "Owner",
+                _("Owner"),
                 owner.display_name,
             )
         else:
             room_settings.add(
-                "Mode",
-                "Server Managed",
+                _("Mode"),
+                _("Server Managed"),
             )
 
         source_channel = self.bot.get_channel(autoroom_info["source_channel"])
@@ -56,7 +59,7 @@ class AutoRoomCommands(MixinMeta):
                         access_text = autoroom_type
                     elif access_text != autoroom_type:
                         # Multiple member roles present, and we can't determine the autoroom type
-                        access_text = "custom"
+                        access_text = _("custom")
                         break
             else:
                 access_text = self.get_autoroom_type(
@@ -64,22 +67,22 @@ class AutoRoomCommands(MixinMeta):
                 )
             access_text = access_text.capitalize()
             if member_roles:
-                access_text += ", only certain roles"
-            room_settings.add("Access", access_text)
+                access_text += _(", only certain roles")
+            room_settings.add(_("Access"), access_text)
             if member_roles:
                 room_settings.add(
-                    "Member Roles", ", ".join(role.name for role in member_roles)
+                    _("Member Roles"), ", ".join(role.name for role in member_roles)
                 )
 
-        room_settings.add("Bitrate", f"{autoroom_channel.bitrate // 1000}kbps")
+        room_settings.add(_("Bitrate"), f"{autoroom_channel.bitrate // 1000}kbps")
         room_settings.add(
-            "Channel Age",
+            _("Channel Age"),
             humanize_timedelta(
                 timedelta=datetime.datetime.utcnow() - autoroom_channel.created_at
             ),
         )
 
-        access_settings = SettingDisplay("Current Access Settings")
+        access_settings = SettingDisplay(_("Current Access Settings"))
         allowed_members = []
         allowed_roles = []
         denied_members = []
@@ -102,21 +105,21 @@ class AutoRoomCommands(MixinMeta):
 
         if allowed_members:
             access_settings.add(
-                "Allowed Members",
+                _("Allowed Members"),
                 ", ".join(member.display_name for member in allowed_members),
             )
         if allowed_roles:
             access_settings.add(
-                "Allowed Roles", ", ".join(role.name for role in allowed_roles)
+                _("Allowed Roles"), ", ".join(role.name for role in allowed_roles)
             )
         if denied_members:
             access_settings.add(
-                "Denied Members",
+                _("Denied Members"),
                 ", ".join(member.display_name for member in denied_members),
             )
         if denied_roles:
             access_settings.add(
-                "Denied Roles", ", ".join(role.name for role in denied_roles)
+                _("Denied Roles"), ", ".join(role.name for role in denied_roles)
             )
 
         await ctx.send(str(room_settings.display(access_settings)))
@@ -136,15 +139,24 @@ class AutoRoomCommands(MixinMeta):
             if retry_after:
                 per_display = bucket.per - self.extra_channel_name_change_delay
                 hint_text = error(
-                    f"{ctx.message.author.mention}, you can only modify an AutoRoom name **{bucket.rate}** times "
-                    f"every **{humanize_timedelta(seconds=per_display)}** with this command. "
-                    f"You can try again in **{humanize_timedelta(seconds=max(1, min(per_display, retry_after)))}**."
-                    "\n\n"
-                    "Alternatively, you can modify the channel yourself by either right clicking the channel on "
-                    "desktop or by long pressing it on mobile."
+                    _(
+                        "{message_author}, you can only modify an AutoRoom name **{rate}** times "
+                        "every **{time}** with this command. "
+                        "You can try again in **{remaining_time}**."
+                        "\n\n"
+                        "Alternatively, you can modify the channel yourself by either right clicking the channel on "
+                        "desktop or by long pressing it on mobile."
+                    ).format(
+                        message_author=ctx.message.author.mention,
+                        rate=bucket.rate,
+                        time=humanize_timedelta(seconds=per_display),
+                        remaining_time=humanize_timedelta(
+                            seconds=max(1, min(per_display, retry_after))
+                        ),
+                    )
                 )
                 if ctx.guild.mfa_level:
-                    hint_text += (
+                    hint_text += _(
                         " Do note that since this server has 2FA enabled, you will need it enabled "
                         "on your account to modify the channel in this way."
                     )
@@ -153,7 +165,7 @@ class AutoRoomCommands(MixinMeta):
                 await delete(hint, delay=30)
                 return
             await autoroom_channel.edit(
-                name=name, reason="AutoRoom: User edit room info"
+                name=name, reason=_("AutoRoom: User edit room info")
             )
         await ctx.tick()
         await delete(ctx.message, delay=5)
@@ -168,7 +180,7 @@ class AutoRoomCommands(MixinMeta):
         bps = max(8000, min(ctx.guild.bitrate_limit, kbps * 1000))
         if bps != autoroom_channel.bitrate:
             await autoroom_channel.edit(
-                bitrate=bps, reason="AutoRoom: User edit room info"
+                bitrate=bps, reason=_("AutoRoom: User edit room info")
             )
         await ctx.tick()
         await delete(ctx.message, delay=5)
@@ -183,7 +195,7 @@ class AutoRoomCommands(MixinMeta):
         limit = max(0, min(99, user_limit))
         if limit != autoroom_channel.user_limit:
             await autoroom_channel.edit(
-                user_limit=limit, reason="AutoRoom: User edit room info"
+                user_limit=limit, reason=_("AutoRoom: User edit room info")
             )
         await ctx.tick()
         await delete(ctx.message, delay=5)
@@ -232,7 +244,7 @@ class AutoRoomCommands(MixinMeta):
                 return
             for member in channel.members:
                 if not member.permissions_in(channel).connect:
-                    await member.move_to(None, reason="AutoRoom: Deny user")
+                    await member.move_to(None, reason=_("AutoRoom: Deny user"))
 
     async def _process_allow_deny(
         self,
@@ -249,8 +261,10 @@ class AutoRoomCommands(MixinMeta):
         if not autoroom_channel.permissions_for(autoroom_channel.guild.me).manage_roles:
             hint = await ctx.send(
                 error(
-                    f"{ctx.message.author.mention}, I do not have the required permissions to do this. "
-                    "Please let the staff know about this!"
+                    _(
+                        "{message_author}, I do not have the required permissions to do this. "
+                        "Please let the staff know about this!"
+                    ).format(message_author=ctx.message.author.mention)
                 )
             )
             await delete(ctx.message, delay=10)
@@ -261,8 +275,10 @@ class AutoRoomCommands(MixinMeta):
         if not source_channel:
             hint = await ctx.send(
                 error(
-                    f"{ctx.message.author.mention}, it seems like the AutoRoom Source this AutoRoom was made from "
-                    "no longer exists. Because of that, I can no longer modify this AutoRoom."
+                    _(
+                        "{message_author}, it seems like the AutoRoom Source this AutoRoom was made from "
+                        "no longer exists. Because of that, I can no longer modify this AutoRoom."
+                    ).format(message_author=ctx.message.author.mention)
                 )
             )
             await delete(ctx.message, delay=10)
@@ -288,32 +304,38 @@ class AutoRoomCommands(MixinMeta):
             # - Make sure that the role isn't denied on the source channel
             # - Check that the role is equal to or above the lowest allowed (member) role on the source channel
             if not self.check_if_member_or_role_allowed(source_channel, member_or_role):
-                user_role = "user"
-                them_it = "them"
+                user_role = _("user")
+                them_it = _("them")
                 if isinstance(member_or_role, discord.Role):
-                    user_role = "role"
-                    them_it = "it"
-                denied_message = (
-                    f"since that {user_role} is not allowed to connect to the AutoRoom Source "
-                    f"that this AutoRoom was made from, I can't allow {them_it} here either."
-                )
+                    user_role = _("role")
+                    them_it = _("it")
+                denied_message = _(
+                    "since that {user_role} is not allowed to connect to the AutoRoom Source "
+                    "that this AutoRoom was made from, I can't allow {them_it} here either."
+                ).format(user_role=user_role, them_it=them_it)
             elif (
                 isinstance(member_or_role, discord.Role)
                 and member_roles
                 and member_or_role.position < lowest_member_role
             ):
-                denied_message = "this AutoRoom is using member roles, so I can't allow a lower hierarchy role."
+                denied_message = _(
+                    "this AutoRoom is using member roles, so I can't allow a lower hierarchy role."
+                )
         else:
             # Deny a specific user
             # - check that they aren't a mod/admin/owner/autoroom owner/bot itself, then deny user
             # Deny a specific role
             # - Check that it isn't a mod/admin role, then deny role
             if member_or_role == ctx.guild.me:
-                denied_message = "why would I deny myself from entering your AutoRoom?"
+                denied_message = _(
+                    "why would I deny myself from entering your AutoRoom?"
+                )
             elif member_or_role == ctx.message.author:
-                denied_message = "don't be so hard on yourself! This is your AutoRoom!"
+                denied_message = _(
+                    "don't be so hard on yourself! This is your AutoRoom!"
+                )
             elif member_or_role == ctx.guild.owner:
-                denied_message = (
+                denied_message = _(
                     "I don't know if you know this, but that's the server owner... "
                     "I can't deny them from entering your AutoRoom."
                 )
@@ -321,12 +343,16 @@ class AutoRoomCommands(MixinMeta):
                 role_suffix = (
                     " role" if isinstance(member_or_role, discord.Role) else ""
                 )
-                denied_message = f"that's an admin{role_suffix}, so I can't deny them from entering your AutoRoom."
+                denied_message = _(
+                    "that's an admin{role_suffix}, so I can't deny them from entering your AutoRoom."
+                ).format(role_suffix=role_suffix)
             elif await self.is_mod_or_mod_role(member_or_role):
                 role_suffix = (
                     " role" if isinstance(member_or_role, discord.Role) else ""
                 )
-                denied_message = f"that's a moderator{role_suffix}, so I can't deny them from entering your AutoRoom."
+                denied_message = _(
+                    "that's a moderator{role_suffix}, so I can't deny them from entering your AutoRoom."
+                ).format(role_suffix=role_suffix)
         if denied_message:
             hint = await ctx.send(
                 error(f"{ctx.message.author.mention}, {denied_message}")
@@ -341,7 +367,7 @@ class AutoRoomCommands(MixinMeta):
         if perms.modified:
             await autoroom_channel.edit(
                 overwrites=perms.overwrites,
-                reason="AutoRoom: Permission change",
+                reason=_("AutoRoom: Permission change"),
             )
         await ctx.tick()
         await delete(ctx.message, delay=5)
@@ -361,7 +387,11 @@ class AutoRoomCommands(MixinMeta):
         autoroom_info = await self.get_autoroom_info(autoroom_channel)
         if not autoroom_info:
             hint = await ctx.send(
-                error(f"{ctx.message.author.mention}, you are not in an AutoRoom.")
+                error(
+                    _("{message_author}, you are not in an AutoRoom.").format(
+                        message_author=ctx.message.author.mention
+                    )
+                )
             )
             await delete(ctx.message, delay=5)
             await delete(hint, delay=5)
@@ -369,10 +399,15 @@ class AutoRoomCommands(MixinMeta):
         if check_owner and ctx.message.author.id != autoroom_info["owner"]:
             reason_server = ""
             if not autoroom_info["owner"]:
-                reason_server = " (it is a server AutoRoom)"
+                reason_server = _(" (it is a server AutoRoom)")
             hint = await ctx.send(
                 error(
-                    f"{ctx.message.author.mention}, you are not the owner of this AutoRoom{reason_server}."
+                    _(
+                        "{message_author}, you are not the owner of this AutoRoom{reason_server}."
+                    ).format(
+                        message_author=ctx.message.author.mention,
+                        reason_server=reason_server,
+                    )
                 )
             )
             await delete(ctx.message, delay=10)

@@ -5,17 +5,21 @@ from typing import Union
 import discord
 from redbot.core import Config, commands
 from redbot.core.utils.chat_formatting import humanize_timedelta
+from redbot.core.i18n import Translator, cog_i18n
 
 from .c_autoroom import AutoRoomCommands
 from .c_autoroomset import AutoRoomSetCommands, channel_name_template
 from .pcx_lib import Perms, SettingDisplay
 from .pcx_template import Template
 
+_ = Translator("AutoRoom", __file__)
+
 
 class CompositeMetaClass(type(commands.Cog), type(ABC)):
     """This allows the metaclass used for proper type detection to coexist with discord.py's metaclass."""
 
 
+@cog_i18n(_)
 class AutoRoom(
     AutoRoomCommands,
     AutoRoomSetCommands,
@@ -109,7 +113,9 @@ class AutoRoom(
     def format_help_for_context(self, ctx: commands.Context) -> str:
         """Show version in help."""
         pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nCog Version: {self.__version__}"
+        return _("{pre_processed}\n\nCog Version: {version}").format(
+            pre_processed=pre_processed, version=self.__version__
+        )
 
     async def red_delete_data_for_user(
         self, **kwargs
@@ -272,7 +278,7 @@ class AutoRoom(
                     ).manage_channels
                 ):
                     await text_channel.delete(
-                        reason="AutoRoom: Associated voice channel deleted."
+                        reason=_("AutoRoom: Associated voice channel deleted.")
                     )
                 await self.config.channel_from_id(voice_channel_id).clear()
 
@@ -305,7 +311,7 @@ class AutoRoom(
                 and text_channel.permissions_for(text_channel.guild.me).manage_channels
             ):
                 await text_channel.delete(
-                    reason="AutoRoom: Associated voice channel deleted."
+                    reason=_("AutoRoom: Associated voice channel deleted.")
                 )
             await self.config.channel(guild_channel).clear()
 
@@ -351,12 +357,20 @@ class AutoRoom(
             if not warn_bucket.update_rate_limit():
                 try:
                     await member.send(
-                        "Hello there! It looks like you're trying to make an AutoRoom."
-                        "\n"
-                        f"Please note that you are only allowed to make **{bucket.rate}** AutoRooms "
-                        f"every **{humanize_timedelta(seconds=bucket.per)}**."
-                        "\n"
-                        f"You can try again in **{humanize_timedelta(seconds=max(retry_after, 1))}**."
+                        _(
+                            "Hello there! It looks like you're trying to make an AutoRoom."
+                            "\n"
+                            "Please note that you are only allowed to make **{rate}** AutoRooms "
+                            "every **{time}**."
+                            "\n"
+                            "You can try again in **{remaining_time}**."
+                        ).format(
+                            member_rate=bucket.rate,
+                            time=humanize_timedelta(seconds=bucket.per),
+                            remaining_time=humanize_timedelta(
+                                seconds=max(retry_after, 1)
+                            ),
+                        )
                     )
                 except (discord.Forbidden, discord.NotFound, discord.HTTPException):
                     pass
@@ -434,7 +448,7 @@ class AutoRoom(
         new_voice_channel = await guild.create_voice_channel(
             name=new_channel_name,
             category=dest_category,
-            reason="AutoRoom: New AutoRoom needed.",
+            reason=_("AutoRoom: New AutoRoom needed."),
             overwrites=perms.overwrites,
             bitrate=autoroom_source.bitrate,
             user_limit=autoroom_source.user_limit,
@@ -445,7 +459,7 @@ class AutoRoom(
         if autoroom_source_config["room_type"] != "server":
             await self.config.channel(new_voice_channel).owner.set(member.id)
         await member.move_to(
-            new_voice_channel, reason="AutoRoom: Move user to new AutoRoom."
+            new_voice_channel, reason=_("AutoRoom: Move user to new AutoRoom.")
         )
 
         # Create optional text channel
@@ -477,7 +491,7 @@ class AutoRoom(
             new_text_channel = await guild.create_text_channel(
                 name=new_channel_name.replace("'s ", " "),
                 category=dest_category,
-                reason="AutoRoom: New text channel needed.",
+                reason=_("AutoRoom: New text channel needed."),
                 overwrites=perms.overwrites,
             )
             await self.config.channel(new_voice_channel).associated_text_channel.set(
@@ -502,7 +516,7 @@ class AutoRoom(
             and voice_channel.guild.me.permissions_in(voice_channel).manage_channels
         ):
             try:
-                await voice_channel.delete(reason="AutoRoom: Channel empty.")
+                await voice_channel.delete(reason=_("AutoRoom: Channel empty."))
             except discord.NotFound:
                 pass  # Sometimes this happens when the user manually deletes their channel
             return True
@@ -534,7 +548,7 @@ class AutoRoom(
         if perms.modified:
             await text_channel.edit(
                 overwrites=perms.overwrites,
-                reason="AutoRoom: Permission change",
+                reason=_("AutoRoom: Permission change"),
             )
 
     def _generate_channel_name(
@@ -670,13 +684,13 @@ class AutoRoom(
             else:
                 return result
 
-        source_section = SettingDisplay("Required on Source Voice Channel")
+        source_section = SettingDisplay(_("Required on Source Voice Channel"))
         for perm_name in self.perms_bot_source:
             source_section.add(
                 perm_name.capitalize().replace("_", " "), getattr(source, perm_name)
             )
 
-        dest_section = SettingDisplay("Required on Destination Category")
+        dest_section = SettingDisplay(_("Required on Destination Category"))
         for perm_name in self.perms_bot_dest:
             dest_section.add(
                 perm_name.capitalize().replace("_", " "), getattr(dest, perm_name)
@@ -684,7 +698,7 @@ class AutoRoom(
         autoroom_sections = [dest_section]
 
         if with_manage_roles_guild:
-            guild_section = SettingDisplay("Required in Guild")
+            guild_section = SettingDisplay(_("Required in Guild"))
             guild_section.add(
                 "Manage roles", category_dest.guild.me.guild_permissions.manage_roles
             )
@@ -692,7 +706,7 @@ class AutoRoom(
 
         if with_text_channel:
             text_section = SettingDisplay(
-                "Optional on Destination Category (for text channel)"
+                _("Optional on Destination Category (for text channel)")
             )
             for perm_name in self.perms_bot_dest_text:
                 text_section.add(
@@ -708,10 +722,15 @@ class AutoRoom(
             status_emoji = "\N{WHITE HEAVY CHECK MARK}"
         elif result_required:
             status_emoji = "\N{WARNING SIGN}\N{VARIATION SELECTOR-16}"
-        result_str = (
-            f"\n{status_emoji} Source VC: {autoroom_source.mention} -> Dest Category: {category_dest.mention}"
+        result_str = _(
+            "\n{status_emoji} Source VC: {autoroom_source} -> Dest Category: {category_dest}"
             "\n"
-            f"{source_section.display(*autoroom_sections)}"
+            "{permissions}"
+        ).format(
+            status_emoji=status_emoji,
+            autoroom_source=autoroom_source.mention,
+            category_dest=category_dest.mention,
+            permissions=source_section.display(*autoroom_sections),
         )
         if split_required_optional_check:
             return result_required, result_optional, result_str
@@ -744,7 +763,7 @@ class AutoRoom(
         if not detailed:
             return True
         clone_section = SettingDisplay(
-            "Optional on Destination Category (for source clone)"
+            _("Optional on Destination Category (for source clone)")
         )
         if checked_perms:
             for name, value in checked_perms.items():

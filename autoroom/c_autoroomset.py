@@ -6,13 +6,18 @@ from redbot.core import checks, commands
 from redbot.core.utils.chat_formatting import error, info, warning
 from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
 from redbot.core.utils.predicates import MessagePredicate
+from redbot.core.i18n import Translator
 
 from .abc import MixinMeta
 from .pcx_lib import SettingDisplay, checkmark
 
+_ = Translator("AutoRoom", __file__)
+
 channel_name_template = {
-    "username": "{{username}}'s Room{% if dupenum > 1 %} ({{dupenum}}){% endif %}",
-    "game": "{{game}}{% if not game %}{{username}}'s Room{% endif %}{% if dupenum > 1 %} ({{dupenum}}){% endif %}",
+    "username": _("{{username}}'s Room{% if dupenum > 1 %} ({{dupenum}}){% endif %}"),
+    "game": _(
+        "{{game}}{% if not game %}{{username}}'s Room{% endif %}{% if dupenum > 1 %} ({{dupenum}}){% endif %}"
+    ),
 }
 
 
@@ -32,21 +37,21 @@ class AutoRoomSetCommands(MixinMeta):
     @autoroomset.command()
     async def settings(self, ctx: commands.Context):
         """Display current settings."""
-        server_section = SettingDisplay("Server Settings")
+        server_section = SettingDisplay(_("Server Settings"))
         server_section.add(
-            "Admin access all AutoRooms",
+            _("Admin access all AutoRooms"),
             await self.config.guild(ctx.guild).admin_access(),
         )
         server_section.add(
-            "Admin access all AutoRoom Text Channels",
+            _("Admin access all AutoRoom Text Channels"),
             await self.config.guild(ctx.guild).admin_access_text(),
         )
         server_section.add(
-            "Moderator access all AutoRooms",
+            _("Moderator access all AutoRooms"),
             await self.config.guild(ctx.guild).mod_access(),
         )
         server_section.add(
-            "Moderator access all AutoRoom Text Channels",
+            _("Moderator access all AutoRoom Text Channels"),
             await self.config.guild(ctx.guild).mod_access_text(),
         )
 
@@ -59,50 +64,56 @@ class AutoRoomSetCommands(MixinMeta):
             dest_category = ctx.guild.get_channel(avc_settings["dest_category_id"])
             autoroom_section = SettingDisplay(f"AutoRoom - {source_channel.name}")
             autoroom_section.add(
-                "Room type",
+                _("Room type"),
                 avc_settings["room_type"].capitalize(),
             )
             autoroom_section.add(
-                "Destination category",
+                _("Destination category"),
                 f"#{dest_category.name}" if dest_category else "INVALID CATEGORY",
             )
             if avc_settings["text_channel"]:
                 autoroom_section.add(
-                    "Text Channel",
-                    "True",
+                    _("Text Channel"),
+                    _("True"),
                 )
             member_roles = self.get_member_roles(source_channel)
             if member_roles:
                 autoroom_section.add(
-                    "Member Roles" if len(member_roles) > 1 else "Member Role",
+                    _("Member Roles") if len(member_roles) > 1 else _("Member Role"),
                     ", ".join(role.name for role in member_roles),
                 )
-            room_name_format = "Username"
+            room_name_format = _("Username")
             if avc_settings["channel_name_type"] in channel_name_template:
                 room_name_format = avc_settings["channel_name_type"].capitalize()
             elif (
                 avc_settings["channel_name_type"] == "custom"
                 and avc_settings["channel_name_format"]
             ):
-                room_name_format = f'Custom: "{avc_settings["channel_name_format"]}"'
-            autoroom_section.add("Room name format", room_name_format)
+                room_name_format = _('Custom: "{channel_name_format}"').format(
+                    channel_name_format=avc_settings["channel_name_format"]
+                )
+            autoroom_section.add(_("Room name format"), room_name_format)
             autoroom_sections.append(autoroom_section)
 
         message = server_section.display(*autoroom_sections)
         required_check, optional_check = await self._check_all_perms(ctx.guild)
         if not required_check:
             message += "\n" + error(
-                "It looks like I am missing one or more required permissions. "
-                "Until I have them, the AutoRoom cog may not function properly "
-                "for all AutoRoom Sources. "
-                "Check `[p]autoroomset permissions` for more information."
+                _(
+                    "It looks like I am missing one or more required permissions. "
+                    "Until I have them, the AutoRoom cog may not function properly "
+                    "for all AutoRoom Sources. "
+                    "Check `[p]autoroomset permissions` for more information."
+                )
             )
         elif not optional_check:
             message += "\n" + warning(
-                "It looks like I am missing one or more optional permissions. "
-                "All AutoRooms will work, however some features (text channels and "
-                "cloned source permissions) may not work. "
-                "Check `[p]autoroomset permissions` for more information."
+                _(
+                    "It looks like I am missing one or more optional permissions. "
+                    "All AutoRooms will work, however some features (text channels and "
+                    "cloned source permissions) may not work. "
+                    "Check `[p]autoroomset permissions` for more information."
+                )
             )
         await ctx.send(message)
 
@@ -116,41 +127,47 @@ class AutoRoomSetCommands(MixinMeta):
             if not ctx.channel.permissions_for(ctx.me).add_reactions:
                 await ctx.send(
                     error(
-                        "Since you have multiple AutoRoom Sources, "
-                        'I need the "Add Reactions" permission to display permission information'
+                        _(
+                            "Since you have multiple AutoRoom Sources, "
+                            'I need the "Add Reactions" permission to display permission information'
+                        )
                     )
                 )
                 return
         if not required_check:
             await ctx.send(
                 error(
-                    "It looks like I am missing one or more required permissions. "
-                    "Until I have them, the AutoRoom Source(s) in question will not function properly."
-                    "\n\n"
-                    "The easiest way of fixing this is just giving me these permissions as part of my server role, "
-                    "otherwise you will need to give me these permissions on the AutoRoom Source and destination "
-                    "category, as specified below."
+                    _(
+                        "It looks like I am missing one or more required permissions. "
+                        "Until I have them, the AutoRoom Source(s) in question will not function properly."
+                        "\n\n"
+                        "The easiest way of fixing this is just giving me these permissions as part of my server role, "
+                        "otherwise you will need to give me these permissions on the AutoRoom Source and destination "
+                        "category, as specified below."
+                    )
                 )
             )
         elif not optional_check:
             await ctx.send(
                 warning(
-                    "It looks like I am missing one or more optional permissions. "
-                    "All AutoRooms will work, however some features (text channels and cloned source permissions) "
-                    "may not work. "
-                    "\n\n"
-                    "The easiest way of fixing this is just giving me these permissions as part of my server role, "
-                    "otherwise you will need to give me these permissions on the destination category, "
-                    "as specified below."
-                    "\n\n"
-                    "In the case of optional permissions, any permission on the AutoRoom Source will be copied to "
-                    "the created AutoRoom, as if we were cloning the AutoRoom Source. In order for this to work, "
-                    "I need each permission to be allowed in the destination category (or server). "
-                    "If it isn't allowed, I will skip copying that permission over."
+                    _(
+                        "It looks like I am missing one or more optional permissions. "
+                        "All AutoRooms will work, however some features (text channels and cloned source permissions) "
+                        "may not work. "
+                        "\n\n"
+                        "The easiest way of fixing this is just giving me these permissions as part of my server role, "
+                        "otherwise you will need to give me these permissions on the destination category, "
+                        "as specified below."
+                        "\n\n"
+                        "In the case of optional permissions, any permission on the AutoRoom Source will be copied to "
+                        "the created AutoRoom, as if we were cloning the AutoRoom Source. In order for this to work, "
+                        "I need each permission to be allowed in the destination category (or server). "
+                        "If it isn't allowed, I will skip copying that permission over."
+                    )
                 )
             )
         else:
-            await ctx.send(checkmark("Everything looks good here!"))
+            await ctx.send(checkmark(_("Everything looks good here!")))
         if len(details_list) > 1:
             if (
                 ctx.channel.permissions_for(ctx.me).add_reactions
@@ -178,7 +195,9 @@ class AutoRoomSetCommands(MixinMeta):
         await self.config.guild(ctx.guild).admin_access.set(admin_access)
         await ctx.send(
             checkmark(
-                f"Admins are {'now' if admin_access else 'no longer'} able to join (new) locked/private AutoRooms."
+                _(
+                    "Admins are {now_or_no_longer} able to join (new) locked/private AutoRooms."
+                ).format(now_or_no_longer=_("now") if admin_access else _("no longer"))
             )
         )
 
@@ -189,7 +208,11 @@ class AutoRoomSetCommands(MixinMeta):
         await self.config.guild(ctx.guild).admin_access_text.set(admin_access_text)
         await ctx.send(
             checkmark(
-                f"Admins are {'now' if admin_access_text else 'no longer'} able to see all (new) AutoRoom Text Channels."
+                _(
+                    "Admins are {now_or_no_longer} able to see all (new) AutoRoom Text Channels."
+                ).format(
+                    now_or_no_longer=_("now") if admin_access_text else _("no longer")
+                )
             )
         )
 
@@ -204,7 +227,9 @@ class AutoRoomSetCommands(MixinMeta):
         await self.config.guild(ctx.guild).mod_access.set(mod_access)
         await ctx.send(
             checkmark(
-                f"Moderators are {'now' if mod_access else 'no longer'} able to join (new) locked/private AutoRooms."
+                _(
+                    "Moderators are {now_or_no_longer} able to join (new) locked/private AutoRooms."
+                ).format(now_or_no_longer=_("now") if mod_access else _("no longer"))
             )
         )
 
@@ -215,7 +240,11 @@ class AutoRoomSetCommands(MixinMeta):
         await self.config.guild(ctx.guild).mod_access_text.set(mod_access_text)
         await ctx.send(
             checkmark(
-                f"Moderators are {'now' if mod_access_text else 'no longer'} able to see all (new) AutoRoom Text Channels."
+                _(
+                    "Moderators are {now_or_no_longer} able to see all (new) AutoRoom Text Channels."
+                ).format(
+                    now_or_no_longer=_("now") if mod_access_text else _("no longer")
+                )
             )
         )
 
@@ -238,16 +267,18 @@ class AutoRoomSetCommands(MixinMeta):
         if not good_permissions:
             await ctx.send(
                 error(
-                    "I am missing a permission that the AutoRoom cog requires me to have. "
-                    "Check below for the permissions I require in both the AutoRoom Source "
-                    "and the destination category. "
-                    "Try creating the AutoRoom Source again once I have these permissions."
-                    "\n"
-                    f"{details}"
-                    "\n"
-                    "The easiest way of doing this is just giving me these permissions as part of my server role, "
-                    "otherwise you will need to give me these permissions on the source channel and destination "
-                    "category, as specified above."
+                    _(
+                        "I am missing a permission that the AutoRoom cog requires me to have. "
+                        "Check below for the permissions I require in both the AutoRoom Source "
+                        "and the destination category. "
+                        "Try creating the AutoRoom Source again once I have these permissions."
+                        "\n"
+                        "{details}"
+                        "\n"
+                        "The easiest way of doing this is just giving me these permissions as part of my server role, "
+                        "otherwise you will need to give me these permissions on the source channel and destination "
+                        "category, as specified above."
+                    ).format(details=details)
                 )
             )
             return
@@ -257,30 +288,35 @@ class AutoRoomSetCommands(MixinMeta):
         options = ["public", "locked", "private", "server"]
         pred = MessagePredicate.lower_contained_in(options, ctx)
         await ctx.send(
-            "**Welcome to the setup wizard for creating an AutoRoom Source!**"
-            "\n"
-            f"Users joining the {source_voice_channel.mention} AutoRoom Source will have an AutoRoom "
-            f"created in the {dest_category.mention} category and be moved into it."
-            "\n\n"
-            "**AutoRoom Type**"
-            "\n"
-            "AutoRooms can be one of the following types when created:"
-            "\n"
-            "`public ` - Visible and joinable by other users. The AutoRoom Owner can kick/ban users out of them."
-            "\n"
-            "`locked ` - Visible, but not joinable by other users. The AutoRoom Owner must allow users into their room."
-            "\n"
-            "`private` - Not visible or joinable by other users. The AutoRoom Owner must allow users into their room."
-            "\n"
-            "`server ` - Same as a public AutoRoom, but with no AutoRoom Owner. "
-            "No modifications can be made to the generated AutoRoom."
-            "\n\n"
-            "What would you like these created AutoRooms to be by default? (`public`/`locked`/`private`/`server`)"
+            _(
+                "**Welcome to the setup wizard for creating an AutoRoom Source!**"
+                "\n"
+                "Users joining the {source_channel} AutoRoom Source will have an AutoRoom "
+                "created in the {dest_category} category and be moved into it."
+                "\n\n"
+                "**AutoRoom Type**"
+                "\n"
+                "AutoRooms can be one of the following types when created:"
+                "\n"
+                "`public ` - Visible and joinable by other users. The AutoRoom Owner can kick/ban users out of them."
+                "\n"
+                "`locked ` - Visible, but not joinable by other users. The AutoRoom Owner must allow users into their room."
+                "\n"
+                "`private` - Not visible or joinable by other users. The AutoRoom Owner must allow users into their room."
+                "\n"
+                "`server ` - Same as a public AutoRoom, but with no AutoRoom Owner. "
+                "No modifications can be made to the generated AutoRoom."
+                "\n\n"
+                "What would you like these created AutoRooms to be by default? (`public`/`locked`/`private`/`server`)"
+            ).format(
+                source_channel=source_voice_channel.mention,
+                dest_category=dest_category.mention,
+            )
         )
         try:
             await ctx.bot.wait_for("message", check=pred, timeout=60)
         except asyncio.TimeoutError:
-            await ctx.send("No valid answer was received, canceling setup process.")
+            await ctx.send(_("No valid answer was received, canceling setup process."))
             return
         new_source["room_type"] = options[pred.result]
 
@@ -294,11 +330,13 @@ class AutoRoomSetCommands(MixinMeta):
         if not good_permissions:
             await ctx.send(
                 error(
-                    f"Since you want to have this AutoRoom Source create {new_source['room_type']} AutoRooms, "
-                    "I will need a few extra permissions. "
-                    "Try creating the AutoRoom Source again once I have these permissions."
-                    "\n"
-                    f"{details}"
+                    _(
+                        "Since you want to have this AutoRoom Source create {room_type} AutoRooms, "
+                        "I will need a few extra permissions. "
+                        "Try creating the AutoRoom Source again once I have these permissions."
+                        "\n"
+                        "{details}"
+                    ).format(room_type=new_source["room_type"], details=details)
                 )
             )
             return
@@ -306,17 +344,19 @@ class AutoRoomSetCommands(MixinMeta):
         # Text channel
         pred = MessagePredicate.yes_or_no(ctx)
         await ctx.send(
-            "**Text Channel**"
-            "\n"
-            "AutoRooms can optionally have a text channel created with them, where only the AutoRoom members can"
-            "see and message in it. This is useful to keep AutoRoom specific chat out of your other channels."
-            "\n\n"
-            "Would you like these created AutoRooms to also have a created text channel? (`yes`/`no`)"
+            _(
+                "**Text Channel**"
+                "\n"
+                "AutoRooms can optionally have a text channel created with them, where only the AutoRoom members can"
+                "see and message in it. This is useful to keep AutoRoom specific chat out of your other channels."
+                "\n\n"
+                "Would you like these created AutoRooms to also have a created text channel? (`yes`/`no`)"
+            )
         )
         try:
             await ctx.bot.wait_for("message", check=pred, timeout=60)
         except asyncio.TimeoutError:
-            await ctx.send("No valid answer was received, canceling setup process.")
+            await ctx.send(_("No valid answer was received, canceling setup process."))
             return
         new_source["text_channel"] = pred.result
 
@@ -331,11 +371,13 @@ class AutoRoomSetCommands(MixinMeta):
         if not good_permissions:
             await ctx.send(
                 warning(
-                    f"Since you want to have this AutoRoom Source also create text channels, "
-                    "I will need a few extra permissions. "
-                    "Until I have these permissions, text channels will not be created."
-                    "\n"
-                    f"{details}"
+                    _(
+                        "Since you want to have this AutoRoom Source also create text channels, "
+                        "I will need a few extra permissions. "
+                        "Until I have these permissions, text channels will not be created."
+                        "\n"
+                        "{details}"
+                    ).format(details=details)
                 )
             )
 
@@ -343,17 +385,19 @@ class AutoRoomSetCommands(MixinMeta):
         options = ["username", "game"]
         pred = MessagePredicate.lower_contained_in(options, ctx)
         await ctx.send(
-            "**Channel Name**"
-            "\n"
-            "When an AutoRoom is created, a name will be generated for it. How would you like that name to be generated?"
-            "\n\n"
-            f'`username` - Shows up as "{ctx.author.display_name}\'s Room"\n'
-            "`game    ` - AutoRoom Owner's playing game, otherwise `username`"
+            _(
+                "**Channel Name**"
+                "\n"
+                "When an AutoRoom is created, a name will be generated for it. How would you like that name to be generated?"
+                "\n\n"
+                '`username` - Shows up as "{message_author}\'s Room"\n'
+                "`game    ` - AutoRoom Owner's playing game, otherwise `username`"
+            ).format(message_author=ctx.author.display_name)
         )
         try:
             await ctx.bot.wait_for("message", check=pred, timeout=60)
         except asyncio.TimeoutError:
-            await ctx.send("No valid answer was received, canceling setup process.")
+            await ctx.send(_("No valid answer was received, canceling setup process."))
             return
         new_source["channel_name_type"] = options[pred.result]
 
@@ -363,9 +407,11 @@ class AutoRoomSetCommands(MixinMeta):
         ).set(new_source)
         await ctx.send(
             checkmark(
-                "Settings saved successfully!\n"
-                "Check out `[p]autoroomset modify` for even more AutoRoom Source settings, "
-                "or to make modifications to your above answers."
+                _(
+                    "Settings saved successfully!\n"
+                    "Check out `[p]autoroomset modify` for even more AutoRoom Source settings, "
+                    "or to make modifications to your above answers."
+                )
             )
         )
 
@@ -381,7 +427,9 @@ class AutoRoomSetCommands(MixinMeta):
         ).clear()
         await ctx.send(
             checkmark(
-                f"**{autoroom_source.mention}** is no longer an AutoRoom Source channel."
+                _(
+                    "**{source_channel}** is no longer an AutoRoom Source channel."
+                ).format(source_channel=autoroom_source.mention)
             )
         )
 
@@ -434,13 +482,19 @@ class AutoRoomSetCommands(MixinMeta):
             ).room_type.set(room_type)
             await ctx.send(
                 checkmark(
-                    f"**{autoroom_source.mention}** will now create `{room_type}` AutoRooms."
+                    _(
+                        "**{source_channel}** will now create `{room_type}` AutoRooms."
+                    ).format(
+                        source_channel=autoroom_source.mention, room_type=room_type
+                    )
                 )
             )
         else:
             await ctx.send(
                 error(
-                    f"**{autoroom_source.mention}** is not an AutoRoom Source channel."
+                    _("**{source_channel}** is not an AutoRoom Source channel.").format(
+                        source_channel=autoroom_source.mention
+                    )
                 )
             )
 
@@ -514,12 +568,14 @@ class AutoRoomSetCommands(MixinMeta):
                 except RuntimeError as rte:
                     await ctx.send(
                         error(
-                            "Hmm... that doesn't seem to be a valid template:"
-                            "\n\n"
-                            f"`{str(rte)}`"
-                            "\n\n"
-                            "If you need some help, take a look at "
-                            "[the readme](https://github.com/PhasecoreX/PCXCogs/tree/master/autoroom/README.md)."
+                            _(
+                                "Hmm... that doesn't seem to be a valid template:"
+                                "\n\n"
+                                "`{runtime_error}`"
+                                "\n\n"
+                                "If you need some help, take a look at "
+                                "[the readme](https://github.com/PhasecoreX/PCXCogs/tree/master/autoroom/README.md)."
+                            ).format(runtime_error=str(rte))
                         )
                     )
                     return
@@ -533,9 +589,11 @@ class AutoRoomSetCommands(MixinMeta):
             await self.config.custom(
                 "AUTOROOM_SOURCE", ctx.guild.id, autoroom_source.id
             ).channel_name_type.set(room_type)
-            message = (
-                f"New AutoRooms created by **{autoroom_source.mention}** "
-                f"will use the **{room_type.capitalize()}** format"
+            message = _(
+                "New AutoRooms created by **{source_channel}** "
+                "will use the **{room_type}** format"
+            ).format(
+                source_channel=autoroom_source.mention, room_type=room_type.capitalize()
             )
             if template:
                 message += f":\n`{template}`"
@@ -544,8 +602,8 @@ class AutoRoomSetCommands(MixinMeta):
                 template = channel_name_template[room_type]
                 message += "."
             if "game" not in data:
-                data["game"] = "Example Game"
-            message += "\n\nExample room names:"
+                data["game"] = _("Example Game")
+            message += _("\n\nExample room names:")
             for room_num in range(1, 4):
                 message += (
                     f"\n{self.format_template_room_name(template, data, room_num)}"
@@ -554,7 +612,9 @@ class AutoRoomSetCommands(MixinMeta):
         else:
             await ctx.send(
                 error(
-                    f"**{autoroom_source.mention}** is not an AutoRoom Source channel."
+                    _("**{source_channel}** is not an AutoRoom Source channel.").format(
+                        source_channel=autoroom_source.mention
+                    )
                 )
             )
 
@@ -578,13 +638,17 @@ class AutoRoomSetCommands(MixinMeta):
             ).text_channel.set(True)
             await ctx.send(
                 checkmark(
-                    f"New AutoRooms created by **{autoroom_source.mention}** will now get their own text channel."
+                    _(
+                        "New AutoRooms created by **{source_channel}** will now get their own text channel."
+                    ).format(source_channel=autoroom_source.mention)
                 )
             )
         else:
             await ctx.send(
                 error(
-                    f"**{autoroom_source.mention}** is not an AutoRoom Source channel."
+                    _("**{source_channel}** is not an AutoRoom Source channel.").format(
+                        source_channel=autoroom_source.mention
+                    )
                 )
             )
 
@@ -601,13 +665,17 @@ class AutoRoomSetCommands(MixinMeta):
             ).text_channel.clear()
             await ctx.send(
                 checkmark(
-                    f"New AutoRooms created by **{autoroom_source.mention}** will no longer get their own text channel."
+                    _(
+                        "New AutoRooms created by **{source_channel}** will no longer get their own text channel."
+                    ).format(source_channel=autoroom_source.mention)
                 )
             )
         else:
             await ctx.send(
                 error(
-                    f"**{autoroom_source.mention}** is not an AutoRoom Source channel."
+                    _("**{source_channel}** is not an AutoRoom Source channel.").format(
+                        source_channel=autoroom_source.mention
+                    )
                 )
             )
 
@@ -640,12 +708,14 @@ class AutoRoomSetCommands(MixinMeta):
             except RuntimeError as rte:
                 await ctx.send(
                     error(
-                        "Hmm... that doesn't seem to be a valid template:"
-                        "\n\n"
-                        f"`{str(rte)}`"
-                        "\n\n"
-                        "If you need some help, take a look at "
-                        "[the readme](https://github.com/PhasecoreX/PCXCogs/tree/master/autoroom/README.md)."
+                        _(
+                            "Hmm... that doesn't seem to be a valid template:"
+                            "\n\n"
+                            "`{runtime_error}`"
+                            "\n\n"
+                            "If you need some help, take a look at "
+                            "[the readme](https://github.com/PhasecoreX/PCXCogs/tree/master/autoroom/README.md)."
+                        ).format(runtime_error=str(rte))
                     )
                 )
                 return
@@ -656,15 +726,22 @@ class AutoRoomSetCommands(MixinMeta):
 
             await ctx.send(
                 checkmark(
-                    f"New AutoRooms created by **{autoroom_source.mention}** will have the following message sent to their text channel:"
-                    "\n\n"
-                    f"{hint_text_formatted}"
+                    _(
+                        "New AutoRooms created by **{source_channel}** will have the following message sent to their text channel:"
+                        "\n\n"
+                        "{message}"
+                    ).format(
+                        source_channel=autoroom_source.mention,
+                        message=hint_text_formatted,
+                    )
                 )
             )
         else:
             await ctx.send(
                 error(
-                    f"**{autoroom_source.mention}** is not an AutoRoom Source channel."
+                    _("**{source_channel}** is not an AutoRoom Source channel.").format(
+                        source_channel=autoroom_source.mention
+                    )
                 )
             )
 
@@ -681,13 +758,17 @@ class AutoRoomSetCommands(MixinMeta):
             ).text_channel_hint.clear()
             await ctx.send(
                 checkmark(
-                    f"New AutoRooms created by **{autoroom_source.mention}** will no longer have a message sent to their text channel."
+                    _(
+                        "New AutoRooms created by **{source_channel}** will no longer have a message sent to their text channel."
+                    ).format(source_channel=autoroom_source.mention)
                 )
             )
         else:
             await ctx.send(
                 error(
-                    f"**{autoroom_source.mention}** is not an AutoRoom Source channel."
+                    _("**{source_channel}** is not an AutoRoom Source channel.").format(
+                        source_channel=autoroom_source.mention
+                    )
                 )
             )
 
@@ -698,23 +779,25 @@ class AutoRoomSetCommands(MixinMeta):
         """Learn how AutoRoom defaults are set."""
         await ctx.send(
             info(
-                "**Bitrate/User Limit**"
-                "\n"
-                "Default bitrate and user limit settings are copied from the AutoRoom Source to the resulting AutoRoom."
-                "\n\n"
-                "**Member Roles**"
-                "\n"
-                "Only members that can view and join an AutoRoom Source will be able to join its resulting AutoRooms. "
-                "If you would like to limit AutoRooms to only allow certain members, simply deny the everyone role "
-                "from viewing/connecting to the AutoRoom Source and allow your member roles to view/connect to it."
-                "\n\n"
-                "**Permissions**"
-                "\n"
-                "All permission overwrites (except for Manage Roles) will be copied from the AutoRoom Source "
-                "to the resulting AutoRoom. Every permission overwrite you want copied over, regardless if it is "
-                "allowed or denied, must be allowed for the bot. It can either be allowed for the bot in the "
-                "destination category or server-wide with the roles it has. `[p]autoroomset permissions` will "
-                "show what permissions will be copied over."
+                _(
+                    "**Bitrate/User Limit**"
+                    "\n"
+                    "Default bitrate and user limit settings are copied from the AutoRoom Source to the resulting AutoRoom."
+                    "\n\n"
+                    "**Member Roles**"
+                    "\n"
+                    "Only members that can view and join an AutoRoom Source will be able to join its resulting AutoRooms. "
+                    "If you would like to limit AutoRooms to only allow certain members, simply deny the everyone role "
+                    "from viewing/connecting to the AutoRoom Source and allow your member roles to view/connect to it."
+                    "\n\n"
+                    "**Permissions**"
+                    "\n"
+                    "All permission overwrites (except for Manage Roles) will be copied from the AutoRoom Source "
+                    "to the resulting AutoRoom. Every permission overwrite you want copied over, regardless if it is "
+                    "allowed or denied, must be allowed for the bot. It can either be allowed for the bot in the "
+                    "destination category or server-wide with the roles it has. `[p]autoroomset permissions` will "
+                    "show what permissions will be copied over."
+                )
             )
         )
 
