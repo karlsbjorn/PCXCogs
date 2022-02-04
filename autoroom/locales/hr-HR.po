@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2022-01-27 09:43+0100\n"
-"PO-Revision-Date: 2022-01-27 11:01+0100\n"
+"PO-Revision-Date: 2022-01-27 12:39+0100\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,14 +36,26 @@ msgid ""
 "autoroom/README.md)\n"
 "    "
 msgstr ""
+"Automatsko upravljanje glasovnim kanalima.\n"
+"\n"
+"    Ovaj modul pomaže u automatskom stvaranju glasovnih kanala.\n"
+"    Kada se član pridruži AutoRoom izvoru (glasovni kanal),\n"
+"    ovaj modul će ih premjestiti u potpuno novi AutoRoom nad kojom imaju "
+"kontrolu.\n"
+"    Nakon što svi napuste AutoRoom, on se automatski briše.\n"
+"\n"
+"    For a quick rundown on how to get started with this cog,\n"
+"    check out [the readme](https://github.com/PhasecoreX/PCXCogs/tree/master/"
+"autoroom/README.md)\n"
+"    "
 
 #: autoroom/autoroom.py:85
 msgid "Set up the cog."
-msgstr ""
+msgstr "Postavi modul."
 
 #: autoroom/autoroom.py:114
 msgid "Show version in help."
-msgstr ""
+msgstr "Prikaži verziju u pomoći."
 
 #: autoroom/autoroom.py:116
 msgid ""
@@ -57,7 +69,7 @@ msgstr ""
 
 #: autoroom/autoroom.py:123
 msgid "Nothing to delete."
-msgstr ""
+msgstr "Nema išta za brisanje."
 
 #: autoroom/autoroom.py:131
 msgid "Perform setup actions before loading cog."
@@ -69,17 +81,19 @@ msgstr ""
 
 #: autoroom/autoroom.py:263
 msgid "Remove non-existent AutoRooms from the config."
-msgstr ""
+msgstr "Ukloni nepostojeće AutoRoome iz konfiguracije."
 
 #: autoroom/autoroom.py:281 autoroom/autoroom.py:314
 msgid "AutoRoom: Associated voice channel deleted."
-msgstr ""
+msgstr "AutoRoom: Pridruženi glasovni kanal izbrisan."
 
 #: autoroom/autoroom.py:291
 msgid ""
 "Clean up config when an AutoRoom (or Source) is deleted (either by the bot "
 "or the user)."
 msgstr ""
+"Očisti konfiguraciju kada je AutoRoom (ili izvor) izbrisan (od strane bota "
+"ili korisnika)"
 
 #: autoroom/autoroom.py:320
 msgid "Do voice channel stuff when users move about channels."
@@ -87,7 +101,7 @@ msgstr ""
 
 #: autoroom/autoroom.py:343
 msgid "Create a voice channel for a member in an AutoRoom Source channel."
-msgstr ""
+msgstr "Izradite glasovni kanal za člana u AutoRoom izvornom kanalu."
 
 #: autoroom/autoroom.py:360
 msgid ""
@@ -96,35 +110,41 @@ msgid ""
 "**{time}**.\n"
 "You can try again in **{remaining_time}**."
 msgstr ""
+"Hej! Čini se da pokušavaš napraviti novi AutoRoom.\n"
+"Imaj na umu da ti je dopušteno napraviti **{rate}** AutoRooma svakih **{time}"
+"**.\n"
+"Možet pokušati ponovno za **{remaining_time}**."
 
 #: autoroom/autoroom.py:451
 msgid "AutoRoom: New AutoRoom needed."
-msgstr ""
+msgstr "AutoRoom: Potreban novi AutoRoom."
 
 #: autoroom/autoroom.py:462
 msgid "AutoRoom: Move user to new AutoRoom."
-msgstr ""
+msgstr "AutoRoom: Premjesti korisnika u novi AutoRoom."
 
 #: autoroom/autoroom.py:494
 msgid "AutoRoom: New text channel needed."
-msgstr ""
+msgstr "AutoRoom: Potreban je novi tekstualni kanal."
 
 #: autoroom/autoroom.py:513
 msgid "Delete AutoRoom if empty."
-msgstr ""
+msgstr "Izbriši AutoRoom ako je prazan."
 
 #: autoroom/autoroom.py:519
 msgid "AutoRoom: Channel empty."
-msgstr ""
+msgstr "AutoRoom: Kanal prazan."
 
 #: autoroom/autoroom.py:526
 msgid ""
 "Allow or deny a user access to the text channel associated to an AutoRoom."
 msgstr ""
+"Dopusti ili zabrani korisniku pristup tekstualnom kanalu povezanim s "
+"AutoRoomom."
 
 #: autoroom/autoroom.py:551 autoroom/c_autoroom.py:370
 msgid "AutoRoom: Permission change"
-msgstr ""
+msgstr "AutoRoom: Promjena dozvole"
 
 #: autoroom/autoroom.py:560
 msgid ""
@@ -149,6 +169,10 @@ msgid ""
 "        Also takes into account if the setting is enabled.\n"
 "        "
 msgstr ""
+"Provjeri je li član (ili uloga) administrator (uloga).\n"
+"\n"
+"        Također uzima u obzir je li postavka omogućena.\n"
+"        "
 
 #: autoroom/autoroom.py:629
 msgid ""
@@ -157,28 +181,34 @@ msgid ""
 "        Also takes into account if the setting is enabled.\n"
 "        "
 msgstr ""
+"Provjeri je li član (ili uloga) moderator (uloga).\n"
+"\n"
+"        Također uzima u obzir je li postavka omogućena.\n"
+"        "
 
 #: autoroom/autoroom.py:650
 msgid ""
 "Check if the permissions in an AutoRoom Source and a destination category "
 "are sufficient."
 msgstr ""
+"Provjeri jesi li dozvole u AutoRoom izvornom kanalu i odredišnoj kategoriji "
+"dovoljne."
 
 #: autoroom/autoroom.py:687
 msgid "Required on Source Voice Channel"
-msgstr ""
+msgstr "Obavezno u izvornom glasovnom kanalu"
 
 #: autoroom/autoroom.py:693
 msgid "Required on Destination Category"
-msgstr ""
+msgstr "Obavezno u odredišnoj kategoriji"
 
 #: autoroom/autoroom.py:701
 msgid "Required in Guild"
-msgstr ""
+msgstr "Obavezno u guildu"
 
 #: autoroom/autoroom.py:709
 msgid "Optional on Destination Category (for text channel)"
-msgstr ""
+msgstr "Izborno u odredišnoj kategoriji (za tekstualni kanal)"
 
 #: autoroom/autoroom.py:725
 msgid ""
@@ -187,10 +217,14 @@ msgid ""
 "{category_dest}\n"
 "{permissions}"
 msgstr ""
+"\n"
+"{status_emoji} Izvorni glasovni kanal: {autoroom_source} -> Odredišna "
+"kategorija: {category_dest}\n"
+"{permissions}"
 
 #: autoroom/autoroom.py:766
 msgid "Optional on Destination Category (for source clone)"
-msgstr ""
+msgstr "Izborno u odredišnoj kategoriji (za izvorni klon)"
 
 #: autoroom/autoroom.py:775
 msgid ""
@@ -217,7 +251,7 @@ msgstr ""
 
 #: autoroom/c_autoroom.py:17
 msgid "The autoroom command."
-msgstr ""
+msgstr "Autoroom naredba."
 
 #: autoroom/c_autoroom.py:22
 msgid ""
@@ -228,74 +262,80 @@ msgid ""
 "master/autoroom/README.md)\n"
 "        "
 msgstr ""
+"Upravljaj svojim AutoRoomom.\n"
+"\n"
+"        Za brzi pregled kako upravljati AutoRoomom,\n"
+"        pogledajte [readme](https://github.com/PhasecoreX/PCXCogs/tree/"
+"master/autoroom/README.md)\n"
+"        "
 
 #: autoroom/c_autoroom.py:30 autoroom/c_autoroomset.py:39
 msgid "Display current settings."
-msgstr ""
+msgstr "Prikaži trenutne postavke."
 
 #: autoroom/c_autoroom.py:37
 msgid "Room Settings"
-msgstr ""
+msgstr "Postavke sobe"
 
 #: autoroom/c_autoroom.py:41
 msgid "Owner"
-msgstr ""
+msgstr "Vlasnik"
 
 #: autoroom/c_autoroom.py:46
 msgid "Mode"
-msgstr ""
+msgstr "Način rada"
 
 #: autoroom/c_autoroom.py:47
 msgid "Server Managed"
-msgstr ""
+msgstr "Upravlja se serverom"
 
 #: autoroom/c_autoroom.py:62
 msgid "custom"
-msgstr ""
+msgstr "prilagođeno"
 
 #: autoroom/c_autoroom.py:70
 msgid ", only certain roles"
-msgstr ""
+msgstr ", samo određene uloge"
 
 #: autoroom/c_autoroom.py:71
 msgid "Access"
-msgstr ""
+msgstr "Pristup"
 
 #: autoroom/c_autoroom.py:74 autoroom/c_autoroomset.py:82
 msgid "Member Roles"
-msgstr ""
+msgstr "Uloge članova"
 
 #: autoroom/c_autoroom.py:77
 msgid "Bitrate"
-msgstr ""
+msgstr "Brzina prijenosa"
 
 #: autoroom/c_autoroom.py:79
 msgid "Channel Age"
-msgstr ""
+msgstr "Dob kanala"
 
 #: autoroom/c_autoroom.py:85
 msgid "Current Access Settings"
-msgstr ""
+msgstr "Trenutne postavke pristupa"
 
 #: autoroom/c_autoroom.py:108
 msgid "Allowed Members"
-msgstr ""
+msgstr "Dozvoljeni članovi"
 
 #: autoroom/c_autoroom.py:113
 msgid "Allowed Roles"
-msgstr ""
+msgstr "Dozvoljene uloge"
 
 #: autoroom/c_autoroom.py:117
 msgid "Denied Members"
-msgstr ""
+msgstr "Odbijeni članovi"
 
 #: autoroom/c_autoroom.py:122
 msgid "Denied Roles"
-msgstr ""
+msgstr "Odbijene uloge"
 
 #: autoroom/c_autoroom.py:129
 msgid "Change the name of your AutoRoom."
-msgstr ""
+msgstr "Promijeni naziv svojeg AutoRooma."
 
 #: autoroom/c_autoroom.py:142
 msgid ""
@@ -306,12 +346,19 @@ msgid ""
 "Alternatively, you can modify the channel yourself by either right clicking "
 "the channel on desktop or by long pressing it on mobile."
 msgstr ""
+"{message_author}, ovom naredbom možete mijenjati naziv AutoRooma **{rate}** "
+"puta svakih **{time}**. Možes pokušati ponovno za **{remaining_time}**.\n"
+"\n"
+"Alternativno, možete sami prilagoditi kanal desnim klikom na kanal na "
+"računalu ili dugim pritiskom na mobilnom uređaju."
 
 #: autoroom/c_autoroom.py:159
 msgid ""
 " Do note that since this server has 2FA enabled, you will need it enabled on "
 "your account to modify the channel in this way."
 msgstr ""
+" Imajte na umu da, budući da ovaj server ima 2FA omogućen, morat ćete ga "
+"omogućiti na svom računu da biste modificirali kanal."
 
 #: autoroom/c_autoroom.py:168 autoroom/c_autoroom.py:183
 #: autoroom/c_autoroom.py:198
@@ -320,27 +367,27 @@ msgstr ""
 
 #: autoroom/c_autoroom.py:175
 msgid "Change the bitrate of your AutoRoom."
-msgstr ""
+msgstr "Promijeni brzinu prijenosa svojeg AutoRooma."
 
 #: autoroom/c_autoroom.py:190
 msgid "Change the user limit of your AutoRoom."
-msgstr ""
+msgstr "Promijeni korisničko ograničenje svojeg AutoRooma."
 
 #: autoroom/c_autoroom.py:205
 msgid "Make your AutoRoom public."
-msgstr ""
+msgstr "Učini svoj AutoRoom javnim."
 
 #: autoroom/c_autoroom.py:210
 msgid "Lock your AutoRoom (visible, but no one can join)."
-msgstr ""
+msgstr "Zaključaj svoj AutoRoom (vidljiv, ali se nitko ne može pridružiti)."
 
 #: autoroom/c_autoroom.py:215
 msgid "Make your AutoRoom private."
-msgstr ""
+msgstr "Učini svoj AutoRoom privatnim."
 
 #: autoroom/c_autoroom.py:222
 msgid "Allow a user (or role) into your AutoRoom."
-msgstr ""
+msgstr "Dopusti korisniku (ili ulogu) u svoj AutoRoom."
 
 #: autoroom/c_autoroom.py:231
 msgid ""
