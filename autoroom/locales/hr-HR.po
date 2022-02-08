@@ -2,18 +2,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-01-27 09:43+0100\n"
-"PO-Revision-Date: 2022-01-27 12:39+0100\n"
+"POT-Creation-Date: 2022-02-04 15:57+0100\n"
+"PO-Revision-Date: 2022-02-08 11:27+0100\n"
+"Last-Translator: \n"
 "Language-Team: \n"
+"Language: hr_HR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: redgettext 3.3\n"
 "X-Generator: Poedit 3.0\n"
-"Last-Translator: \n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"Language: hr_HR\n"
 
 #: autoroom/autoroom.py:19
 msgid ""
@@ -402,10 +402,18 @@ msgid ""
 "        member roles, denying roles will probably not work as expected.\n"
 "        "
 msgstr ""
+"Zabranite korisniku (ili ulozi) pristup vašem AutoRoomu.\n"
+"\n"
+"        Ako je korisnik već u vašem AutoRoomu, bit će izbačen.\n"
+"\n"
+"        Ako korisnik više ne može pristupiti kanalu zbog odbijanja uloge,\n"
+"        i oni će biti izbačeni. Imajte na umu da ako server koristi uloge\n"
+"        članova, odbijanje uloga vjerojatno neće raditi kako treba.\n"
+"        "
 
 #: autoroom/c_autoroom.py:247
 msgid "AutoRoom: Deny user"
-msgstr ""
+msgstr "AutoRoom: Zabrani korisnika"
 
 #: autoroom/c_autoroom.py:256
 msgid "Actually do channel edit for allow/deny."
@@ -416,34 +424,40 @@ msgid ""
 "{message_author}, I do not have the required permissions to do this. Please "
 "let the staff know about this!"
 msgstr ""
+"{message_author}, nemam potrebne dozvole za to. Molim obavijestite osoblje o "
+"tome!"
 
 #: autoroom/c_autoroom.py:278
 msgid ""
 "{message_author}, it seems like the AutoRoom Source this AutoRoom was made "
 "from no longer exists. Because of that, I can no longer modify this AutoRoom."
 msgstr ""
+"{message_author}, čini se da AutoRoom izvor iz kojeg je ovaj AutoRoom "
+"napravljen više ne postoji. Zbog toga više ne mogu mijenjati ovaj AutoRoom."
 
 #: autoroom/c_autoroom.py:307
 msgid "user"
-msgstr ""
+msgstr "korisnik"
 
 #: autoroom/c_autoroom.py:308
 msgid "them"
-msgstr ""
+msgstr "im"
 
 #: autoroom/c_autoroom.py:310
 msgid "role"
-msgstr ""
+msgstr "uloga"
 
 #: autoroom/c_autoroom.py:311
 msgid "it"
-msgstr ""
+msgstr "joj"
 
 #: autoroom/c_autoroom.py:312
 msgid ""
 "since that {user_role} is not allowed to connect to the AutoRoom Source that "
 "this AutoRoom was made from, I can't allow {them_it} here either."
 msgstr ""
+"budući da {user_role} nema pristup AutoRoom izvoru od kojeg je ovaj AutoRoom "
+"napravljen, ne mogu {them_it} ni ovdje dati pristup."
 
 #: autoroom/c_autoroom.py:321
 msgid ""
@@ -483,7 +497,7 @@ msgstr ""
 
 #: autoroom/c_autoroom.py:391
 msgid "{message_author}, you are not in an AutoRoom."
-msgstr ""
+msgstr "{message_author}, niste u AutoRoomu."
 
 #: autoroom/c_autoroom.py:402
 msgid " (it is a server AutoRoom)"
@@ -512,7 +526,7 @@ msgstr ""
 
 #: autoroom/c_autoroomset.py:25
 msgid "The autoroomset command."
-msgstr ""
+msgstr "autoroomset naredba."
 
 #: autoroom/c_autoroomset.py:31
 msgid ""
@@ -523,58 +537,64 @@ msgid ""
 "master/autoroom/README.md)\n"
 "        "
 msgstr ""
+"Konfiguriraj AutoRoom modul.\n"
+"\n"
+"        Za brzi pregled kako započeti s ovim modulom,\n"
+"        pogledajte [readme](https://github.com/PhasecoreX/PCXCogs/tree/"
+"master/autoroom/README.md)\n"
+"        "
 
 #: autoroom/c_autoroomset.py:40
 msgid "Server Settings"
-msgstr ""
+msgstr "Postavke servera"
 
 #: autoroom/c_autoroomset.py:42
 msgid "Admin access all AutoRooms"
-msgstr ""
+msgstr "Administratori imaju pristup svim AutoRoomima"
 
 #: autoroom/c_autoroomset.py:46
 msgid "Admin access all AutoRoom Text Channels"
-msgstr ""
+msgstr "Administratori imaju pristup svim AutoRoom tekstualnim kanalima"
 
 #: autoroom/c_autoroomset.py:50
 msgid "Moderator access all AutoRooms"
-msgstr ""
+msgstr "Moderatori imaju pristup svim AutoRoomima"
 
 #: autoroom/c_autoroomset.py:54
 msgid "Moderator access all AutoRoom Text Channels"
-msgstr ""
+msgstr "Moderatori imaju pristup svim AutoRoom tekstualnim kanalima"
 
 #: autoroom/c_autoroomset.py:67
 msgid "Room type"
-msgstr ""
+msgstr "Vrsta sobe"
 
 #: autoroom/c_autoroomset.py:71
 msgid "Destination category"
-msgstr ""
+msgstr "Odredišna kategorija"
 
 #: autoroom/c_autoroomset.py:76
 msgid "Text Channel"
-msgstr ""
+msgstr "Tekstualni kanal"
 
 #: autoroom/c_autoroomset.py:77
 msgid "True"
-msgstr ""
+msgstr "Istinito"
 
 #: autoroom/c_autoroomset.py:82
 msgid "Member Role"
-msgstr ""
+msgstr "Član uloge"
 
 #: autoroom/c_autoroomset.py:85
 msgid "Username"
-msgstr ""
+msgstr "Korisničko ime"
 
 #: autoroom/c_autoroomset.py:92
 msgid "Custom: \"{channel_name_format}\""
-msgstr ""
+msgstr "Prilagođeno: \"{channel_name_format}\""
 
 #: autoroom/c_autoroomset.py:95
 msgid "Room name format"
-msgstr ""
+msgstr "Format naziva sobe"
 
 #: autoroom/c_autoroomset.py:102
 msgid ""
@@ -582,6 +602,9 @@ msgid ""
 "them, the AutoRoom cog may not function properly for all AutoRoom Sources. "
 "Check `[p]autoroomset permissions` for more information."
 msgstr ""
+"Čini se da mi nedostaje jedna ili više potrebnih dozvola. Dok ih ne dobijem, "
+"AutoRoom modul možda neće ispravno funkcionirati za sve AutoRoom izvore. "
+"Provjerite `[p]autoroomset permissions` za više informacija."
 
 #: autoroom/c_autoroomset.py:111
 msgid ""
@@ -590,18 +613,32 @@ msgid ""
 "permissions) may not work. Check `[p]autoroomset permissions` for more "
 "information."
 msgstr ""
+"Čini se da mi nedostaje jedna ili više neobaveznih dozvola. Svi AutoRoomi će "
+"raditi, no neke značajke (teksutalni kanali i klonirane dozvole izvora) "
+"možda neće raditi. Provjerite `[p]autoroomset permissions` za više "
+"informacija."
 
 #: autoroom/c_autoroomset.py:122
 msgid "Check that the bot has all needed permissions."
-msgstr ""
+msgstr "Provjeri ima li bot sve potrebne dozvole."
 
-#: autoroom/c_autoroomset.py:130
+#: autoroom/c_autoroomset.py:129
+msgid ""
+"You don't have any AutoRoom Sources set up! Set one up with `[p]autoroomset "
+"create` first, then I can check what permissions I need for it."
+msgstr ""
+"Nemate postavljenih AutoRoom izvora! Prvo postavite jedan pomoću "
+"`[p]autoroomset create`, a zatim mogu provjeriti koje mi dozvole trebaju."
+
+#: autoroom/c_autoroomset.py:144
 msgid ""
 "Since you have multiple AutoRoom Sources, I need the \"Add Reactions\" "
-"permission to display permission information"
+"permission to display permission information."
 msgstr ""
+"Budući da imate više AutoRoom izvora, trebam \"Dodavanje reakcija\" dozvolu "
+"za prikaz informacija o dozvolama."
 
-#: autoroom/c_autoroomset.py:140
+#: autoroom/c_autoroomset.py:155
 msgid ""
 "It looks like I am missing one or more required permissions. Until I have "
 "them, the AutoRoom Source(s) in question will not function properly.\n"
@@ -610,8 +647,14 @@ msgid ""
 "of my server role, otherwise you will need to give me these permissions on "
 "the AutoRoom Source and destination category, as specified below."
 msgstr ""
+"Čini se da mi nedostaje jedna ili više potrebnih dozvola. Dok ih ne dobijem, "
+"dotični AutoRoom izvor(i) neće ispravno funkcionirati.\n"
+"\n"
+"Najlakši način da to popravite je da mi samo date ove dozvole kao dio moje "
+"uloge servera, inače ćete mi morati dati te dozvole na AutoRoom izvoru i "
+"odredišnoj kategoriji, kao što je navedeno u nastavku."
 
-#: autoroom/c_autoroomset.py:153
+#: autoroom/c_autoroomset.py:168
 msgid ""
 "It looks like I am missing one or more optional permissions. All AutoRooms "
 "will work, however some features (text channels and cloned source "
@@ -627,72 +670,94 @@ msgid ""
 "the destination category (or server). If it isn't allowed, I will skip "
 "copying that permission over."
 msgstr ""
-
-#: autoroom/c_autoroomset.py:170
-msgid "Everything looks good here!"
-msgstr ""
+"Čini se da mi nedostaje jedna ili više neobavezna dozvola. Svi AutoRoomi će "
+"raditi, no neke značajke (tekstualni kanali i klonirane dozvole izvora) "
+"možda neće raditi.\n"
+"\n"
+"Najlakši način da to popravite je da mi samo date ove dozvole kao dio moje "
+"uloge servera, inače ćete mi morati dati te dozvole na odredišnoj "
+"kategoriji, kao što je navedeno u nastavku.\n"
+"\n"
+"U slučaju neobaveznih dozvola, bilo koja dozvola na AutoRoom izvoru će biti "
+"kopirana u kreirani AutoRoom, kao da kloniramo AutoRoom izvor. Da bi ovo "
+"funkcioniralo, trebam da mi svaka dozvola bude dopuštena u odredišnoj "
+"kategoriji (ili serveru). Ako mi nije dopušteno, preskočit ću kopiranje te "
+"dozvole."
 
 #: autoroom/c_autoroomset.py:185
+msgid "Everything looks good here!"
+msgstr "Sve izgleda dobro!"
+
+#: autoroom/c_autoroomset.py:201
 msgid "Control access to all AutoRooms."
-msgstr ""
+msgstr "Kontroliraj pristup svim AutoRoomima."
 
-#: autoroom/c_autoroomset.py:189
+#: autoroom/c_autoroomset.py:205
 msgid "Change Admin access to AutoRooms."
-msgstr ""
+msgstr "Promijeni administratorski pristup AutoRoomima."
 
-#: autoroom/c_autoroomset.py:193
+#: autoroom/c_autoroomset.py:209
 msgid "Allow Admins to join locked/private AutoRooms."
 msgstr ""
+"Dopusti administratorima da se pridruže zaključanim/privatnim AutoRoomima."
 
-#: autoroom/c_autoroomset.py:198
+#: autoroom/c_autoroomset.py:214
 msgid ""
 "Admins are {now_or_no_longer} able to join (new) locked/private AutoRooms."
 msgstr ""
+"Administratori se {now_or_no_longer} mogu pridružiti (novim) zaključanim/"
+"privatnim AutoRoomima."
 
-#: autoroom/c_autoroomset.py:200 autoroom/c_autoroomset.py:214
-#: autoroom/c_autoroomset.py:232 autoroom/c_autoroomset.py:246
+#: autoroom/c_autoroomset.py:216 autoroom/c_autoroomset.py:230
+#: autoroom/c_autoroomset.py:248 autoroom/c_autoroomset.py:262
 msgid "now"
-msgstr ""
+msgstr "sada"
 
-#: autoroom/c_autoroomset.py:200 autoroom/c_autoroomset.py:214
-#: autoroom/c_autoroomset.py:232 autoroom/c_autoroomset.py:246
+#: autoroom/c_autoroomset.py:216 autoroom/c_autoroomset.py:230
+#: autoroom/c_autoroomset.py:248 autoroom/c_autoroomset.py:262
 msgid "no longer"
-msgstr ""
+msgstr "više ne"
 
-#: autoroom/c_autoroomset.py:206
+#: autoroom/c_autoroomset.py:222
 msgid "Allow Admins to see all AutoRoom Text Channels."
-msgstr ""
+msgstr "Dopusti administratorima da vide sve AutoRoom teksutalne kanale."
 
-#: autoroom/c_autoroomset.py:211
+#: autoroom/c_autoroomset.py:227
 msgid ""
 "Admins are {now_or_no_longer} able to see all (new) AutoRoom Text Channels."
 msgstr ""
+"Administratori {now_or_no_longer} mogu vidjeti sve (nove) AutoRoom "
+"tekstualne kanale."
 
-#: autoroom/c_autoroomset.py:221
+#: autoroom/c_autoroomset.py:237
 msgid "Change Moderator access to AutoRooms."
-msgstr ""
+msgstr "Promijeni moderatorski pristup AutoRoomima."
 
-#: autoroom/c_autoroomset.py:225
+#: autoroom/c_autoroomset.py:241
 msgid "Allow Moderators to join locked/private AutoRooms."
-msgstr ""
+msgstr "Dopusti moderatorima da se pridruže zaključanim/privatnim AutoRoomima."
 
-#: autoroom/c_autoroomset.py:230
+#: autoroom/c_autoroomset.py:246
 msgid ""
 "Moderators are {now_or_no_longer} able to join (new) locked/private "
 "AutoRooms."
 msgstr ""
+"Moderatori se {now_or_no_longer} mogu pridružiti (novim) zaključanim/"
+"privatnim AutoRoomima."
 
-#: autoroom/c_autoroomset.py:238
+#: autoroom/c_autoroomset.py:254
 msgid "Allow Moderators to see all AutoRoom Text Channels."
-msgstr ""
+msgstr "Dopusti moderatorima da vide sve AutoRoom teksutalne kanale."
 
-#: autoroom/c_autoroomset.py:243
+#: autoroom/c_autoroomset.py:259
 msgid ""
 "Moderators are {now_or_no_longer} able to see all (new) AutoRoom Text "
 "Channels."
 msgstr ""
+"Moderatori {now_or_no_longer} mogu vidjeti sve (nove) AutoRoom tekstualne "
+"kanale."
 
-#: autoroom/c_autoroomset.py:258
+#: autoroom/c_autoroomset.py:274
 msgid ""
 "Create an AutoRoom Source.\n"
 "\n"
@@ -701,8 +766,14 @@ msgid ""
 "        and then be moved into it.\n"
 "        "
 msgstr ""
+"Izradi AutoRoom izvor.\n"
+"\n"
+"        Svatko tko se pridruži AutoRoom izvoru automatski će imati novi\n"
+"        glasovni kanal (AutoRoom) kreiran u odredišnoj kategoriji, a\n"
+"        zatim će biti premješten u njega.\n"
+"        "
 
-#: autoroom/c_autoroomset.py:270
+#: autoroom/c_autoroomset.py:286
 msgid ""
 "I am missing a permission that the AutoRoom cog requires me to have. Check "
 "below for the permissions I require in both the AutoRoom Source and the "
@@ -714,7 +785,7 @@ msgid ""
 "source channel and destination category, as specified above."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:291
+#: autoroom/c_autoroomset.py:307
 msgid ""
 "**Welcome to the setup wizard for creating an AutoRoom Source!**\n"
 "Users joining the {source_channel} AutoRoom Source will have an AutoRoom "
@@ -735,12 +806,12 @@ msgid ""
 "`locked`/`private`/`server`)"
 msgstr ""
 
-#: autoroom/c_autoroomset.py:319 autoroom/c_autoroomset.py:359
-#: autoroom/c_autoroomset.py:400
+#: autoroom/c_autoroomset.py:335 autoroom/c_autoroomset.py:375
+#: autoroom/c_autoroomset.py:416
 msgid "No valid answer was received, canceling setup process."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:333
+#: autoroom/c_autoroomset.py:349
 msgid ""
 "Since you want to have this AutoRoom Source create {room_type} AutoRooms, I "
 "will need a few extra permissions. Try creating the AutoRoom Source again "
@@ -748,7 +819,7 @@ msgid ""
 "{details}"
 msgstr ""
 
-#: autoroom/c_autoroomset.py:347
+#: autoroom/c_autoroomset.py:363
 msgid ""
 "**Text Channel**\n"
 "AutoRooms can optionally have a text channel created with them, where only "
@@ -759,7 +830,7 @@ msgid ""
 "(`yes`/`no`)"
 msgstr ""
 
-#: autoroom/c_autoroomset.py:374
+#: autoroom/c_autoroomset.py:390
 msgid ""
 "Since you want to have this AutoRoom Source also create text channels, I "
 "will need a few extra permissions. Until I have these permissions, text "
@@ -767,7 +838,7 @@ msgid ""
 "{details}"
 msgstr ""
 
-#: autoroom/c_autoroomset.py:388
+#: autoroom/c_autoroomset.py:404
 msgid ""
 "**Channel Name**\n"
 "When an AutoRoom is created, a name will be generated for it. How would you "
@@ -777,68 +848,68 @@ msgid ""
 "`game    ` - AutoRoom Owner's playing game, otherwise `username`"
 msgstr ""
 
-#: autoroom/c_autoroomset.py:410
+#: autoroom/c_autoroomset.py:426
 msgid ""
 "Settings saved successfully!\n"
 "Check out `[p]autoroomset modify` for even more AutoRoom Source settings, or "
 "to make modifications to your above answers."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:424
+#: autoroom/c_autoroomset.py:440
 msgid "Remove an AutoRoom Source."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:430
+#: autoroom/c_autoroomset.py:446
 msgid "**{source_channel}** is no longer an AutoRoom Source channel."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:438
+#: autoroom/c_autoroomset.py:454
 msgid "Modify an existing AutoRoom Source."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:442
+#: autoroom/c_autoroomset.py:458
 msgid "Choose what type of AutoRoom is created."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:448
+#: autoroom/c_autoroomset.py:464
 msgid "Rooms will be open to all. AutoRoom Owner has control over room."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:455
+#: autoroom/c_autoroomset.py:471
 msgid ""
 "Rooms will be visible to all, but not joinable. AutoRoom Owner can allow "
 "users in."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:462
+#: autoroom/c_autoroomset.py:478
 msgid "Rooms will be hidden. AutoRoom Owner can allow users in."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:469
+#: autoroom/c_autoroomset.py:485
 msgid ""
 "Rooms will be open to all, but the server owns the AutoRoom (so they can't "
 "be modified)."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:478
+#: autoroom/c_autoroomset.py:494
 msgid "Save the public/private setting."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:485
+#: autoroom/c_autoroomset.py:501
 msgid "**{source_channel}** will now create `{room_type}` AutoRooms."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:495 autoroom/c_autoroomset.py:615
-#: autoroom/c_autoroomset.py:649 autoroom/c_autoroomset.py:676
-#: autoroom/c_autoroomset.py:742 autoroom/c_autoroomset.py:769
+#: autoroom/c_autoroomset.py:511 autoroom/c_autoroomset.py:631
+#: autoroom/c_autoroomset.py:665 autoroom/c_autoroomset.py:692
+#: autoroom/c_autoroomset.py:758 autoroom/c_autoroomset.py:785
 msgid "**{source_channel}** is not an AutoRoom Source channel."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:503
+#: autoroom/c_autoroomset.py:519
 msgid "Set the default name format of an AutoRoom."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:509
+#: autoroom/c_autoroomset.py:525
 msgid ""
 "Default format: PhasecoreX's Room.\n"
 "\n"
@@ -847,7 +918,7 @@ msgid ""
 "        "
 msgstr ""
 
-#: autoroom/c_autoroomset.py:520
+#: autoroom/c_autoroomset.py:536
 msgid ""
 "The users current playing game, otherwise the username format.\n"
 "\n"
@@ -857,7 +928,7 @@ msgid ""
 "        "
 msgstr ""
 
-#: autoroom/c_autoroomset.py:535
+#: autoroom/c_autoroomset.py:551
 msgid ""
 "A custom channel name.\n"
 "\n"
@@ -883,11 +954,11 @@ msgid ""
 "        "
 msgstr ""
 
-#: autoroom/c_autoroomset.py:560
+#: autoroom/c_autoroomset.py:576
 msgid "Save the room name type."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:571 autoroom/c_autoroomset.py:711
+#: autoroom/c_autoroomset.py:587 autoroom/c_autoroomset.py:727
 msgid ""
 "Hmm... that doesn't seem to be a valid template:\n"
 "\n"
@@ -897,52 +968,52 @@ msgid ""
 "PhasecoreX/PCXCogs/tree/master/autoroom/README.md)."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:592
+#: autoroom/c_autoroomset.py:608
 msgid ""
 "New AutoRooms created by **{source_channel}** will use the **{room_type}** "
 "format"
 msgstr ""
 
-#: autoroom/c_autoroomset.py:605
+#: autoroom/c_autoroomset.py:621
 msgid "Example Game"
 msgstr ""
 
-#: autoroom/c_autoroomset.py:606
+#: autoroom/c_autoroomset.py:622
 msgid ""
 "\n"
 "\n"
 "Example room names:"
 msgstr ""
 
-#: autoroom/c_autoroomset.py:626
+#: autoroom/c_autoroomset.py:642
 msgid "Manage if a text channel should be created as well."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:634
+#: autoroom/c_autoroomset.py:650
 msgid "Enable creating a text channel with the AutoRoom."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:641
+#: autoroom/c_autoroomset.py:657
 msgid ""
 "New AutoRooms created by **{source_channel}** will now get their own text "
 "channel."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:661
+#: autoroom/c_autoroomset.py:677
 msgid "Disable creating a text channel with the AutoRoom."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:668
+#: autoroom/c_autoroomset.py:684
 msgid ""
 "New AutoRooms created by **{source_channel}** will no longer get their own "
 "text channel."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:687
+#: autoroom/c_autoroomset.py:703
 msgid "Configure sending an introductory message to the text channel."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:697
+#: autoroom/c_autoroomset.py:713
 msgid ""
 "Send a message to the newly generated text channel.\n"
 "\n"
@@ -955,7 +1026,7 @@ msgid ""
 "        "
 msgstr ""
 
-#: autoroom/c_autoroomset.py:729
+#: autoroom/c_autoroomset.py:745
 msgid ""
 "New AutoRooms created by **{source_channel}** will have the following "
 "message sent to their text channel:\n"
@@ -963,21 +1034,21 @@ msgid ""
 "{message}"
 msgstr ""
 
-#: autoroom/c_autoroomset.py:754
+#: autoroom/c_autoroomset.py:770
 msgid "Disable sending a message to the newly generated text channel."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:761
+#: autoroom/c_autoroomset.py:777
 msgid ""
 "New AutoRooms created by **{source_channel}** will no longer have a message "
 "sent to their text channel."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:779
+#: autoroom/c_autoroomset.py:795
 msgid "Learn how AutoRoom defaults are set."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:782
+#: autoroom/c_autoroomset.py:798
 msgid ""
 "**Bitrate/User Limit**\n"
 "Default bitrate and user limit settings are copied from the AutoRoom Source "
@@ -998,6 +1069,6 @@ msgid ""
 "what permissions will be copied over."
 msgstr ""
 
-#: autoroom/c_autoroomset.py:805
+#: autoroom/c_autoroomset.py:821
 msgid "Check all permissions for all AutoRooms in a guild."
 msgstr ""

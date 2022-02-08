@@ -365,7 +365,7 @@ class AutoRoom(
                             "\n"
                             "You can try again in **{remaining_time}**."
                         ).format(
-                            member_rate=bucket.rate,
+                            rate=bucket.rate,
                             time=humanize_timedelta(seconds=bucket.per),
                             remaining_time=humanize_timedelta(
                                 seconds=max(retry_after, 1)
