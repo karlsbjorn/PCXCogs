@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2022-02-04 15:57+0100\n"
-"PO-Revision-Date: 2022-02-08 11:27+0100\n"
+"PO-Revision-Date: 2022-02-19 00:22+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: hr_HR\n"
@@ -113,7 +113,7 @@ msgstr ""
 "Hej! Čini se da pokušavaš napraviti novi AutoRoom.\n"
 "Imaj na umu da ti je dopušteno napraviti **{rate}** AutoRooma svakih **{time}"
 "**.\n"
-"Možet pokušati ponovno za **{remaining_time}**."
+"Možeš pokušati ponovno za **{remaining_time}**."
 
 #: autoroom/autoroom.py:451
 msgid "AutoRoom: New AutoRoom needed."
@@ -865,11 +865,11 @@ msgstr ""
 
 #: autoroom/c_autoroomset.py:454
 msgid "Modify an existing AutoRoom Source."
-msgstr ""
+msgstr "Izmijeni postojeći AutoRoom izvor."
 
 #: autoroom/c_autoroomset.py:458
 msgid "Choose what type of AutoRoom is created."
-msgstr ""
+msgstr "Odaberi koja će se vrsta AutoRooma kreirati."
 
 #: autoroom/c_autoroomset.py:464
 msgid "Rooms will be open to all. AutoRoom Owner has control over room."
@@ -967,16 +967,24 @@ msgid ""
 "If you need some help, take a look at [the readme](https://github.com/"
 "PhasecoreX/PCXCogs/tree/master/autoroom/README.md)."
 msgstr ""
+"Hmm... čini se da to nije valjani predložak:\n"
+"\n"
+"`{runtime_error}`\n"
+"\n"
+"Ako trebate pomoć, pogledajte [readme](https://github.com/PhasecoreX/PCXCogs/"
+"tree/master/autoroom/README.md)."
 
 #: autoroom/c_autoroomset.py:608
 msgid ""
 "New AutoRooms created by **{source_channel}** will use the **{room_type}** "
 "format"
 msgstr ""
+"Novi AutoRoomi koje je izradio **{source_channel}** će koristiti "
+"**{room_type}** format"
 
 #: autoroom/c_autoroomset.py:621
 msgid "Example Game"
-msgstr ""
+msgstr "Primjer igre"
 
 #: autoroom/c_autoroomset.py:622
 msgid ""
@@ -984,34 +992,41 @@ msgid ""
 "\n"
 "Example room names:"
 msgstr ""
+"\n"
+"\n"
+"Primjeri naziva soba:"
 
 #: autoroom/c_autoroomset.py:642
 msgid "Manage if a text channel should be created as well."
-msgstr ""
+msgstr "Upravljaj treba li stvoriti i tekstualni kanal."
 
 #: autoroom/c_autoroomset.py:650
 msgid "Enable creating a text channel with the AutoRoom."
-msgstr ""
+msgstr "Omogući stvaranje tekstualnog kanal s AutoRoomom."
 
 #: autoroom/c_autoroomset.py:657
 msgid ""
 "New AutoRooms created by **{source_channel}** will now get their own text "
 "channel."
 msgstr ""
+"Novi AutoRoomi koje je izradio **{source_channel}** imati će vlastiti "
+"tekstualni kanal."
 
 #: autoroom/c_autoroomset.py:677
 msgid "Disable creating a text channel with the AutoRoom."
-msgstr ""
+msgstr "Onemogući stvaranje tekstualnog kanala s AutoRoomom."
 
 #: autoroom/c_autoroomset.py:684
 msgid ""
 "New AutoRooms created by **{source_channel}** will no longer get their own "
 "text channel."
 msgstr ""
+"Novi AutoRoomi koje je izradio **{source_channel}** više neće imati vlastiti "
+"tekstualni kanal."
 
 #: autoroom/c_autoroomset.py:703
 msgid "Configure sending an introductory message to the text channel."
-msgstr ""
+msgstr "Konfiguriraj slanje uvodne poruke u tekstualni kanal."
 
 #: autoroom/c_autoroomset.py:713
 msgid ""
@@ -1025,6 +1040,13 @@ msgid ""
 "autoroom/README.md).\n"
 "        "
 msgstr ""
+"Pošalji poruku u novogenerirani tekstualni kanal.\n"
+"\n"
+"        Može sadržavati varijable i izjave, o kojima možete saznati više\n"
+"        gledajući `[p]autoroomset modify name custom`, ili gledajući\n"
+"        [readme](https://github.com/PhasecoreX/PCXCogs/tree/master/autoroom/"
+"README.md).\n"
+"        "
 
 #: autoroom/c_autoroomset.py:745
 msgid ""
@@ -1033,20 +1055,26 @@ msgid ""
 "\n"
 "{message}"
 msgstr ""
+"Novi AutoRoomi koje je izradio **{source_channel}** imat će sljedeću poruku "
+"poslanu u tekstualni kanal:\n"
+"\n"
+"{message}"
 
 #: autoroom/c_autoroomset.py:770
 msgid "Disable sending a message to the newly generated text channel."
-msgstr ""
+msgstr "Onemogući slanje poruke u novogenerirani tekstualni kanal."
 
 #: autoroom/c_autoroomset.py:777
 msgid ""
 "New AutoRooms created by **{source_channel}** will no longer have a message "
 "sent to their text channel."
 msgstr ""
+"Novi AutoRoomi koje je izradio **{source_channel}** više neće imati poruku u "
+"tekstualnom kanalu."
 
 #: autoroom/c_autoroomset.py:795
 msgid "Learn how AutoRoom defaults are set."
-msgstr ""
+msgstr "Saznaj kako se postavljuju zadane postavke AutoRooma."
 
 #: autoroom/c_autoroomset.py:798
 msgid ""
@@ -1068,6 +1096,24 @@ msgid ""
 "server-wide with the roles it has. `[p]autoroomset permissions` will show "
 "what permissions will be copied over."
 msgstr ""
+"**Brzina prijenosa/korisničko ograničenje**\n"
+"Zadane postavke brzine prijenosa i korisničkog ograničenja kopiraju se iz "
+"AutoRoom izvora u rezultirajući AutoRoom.\n"
+"\n"
+"**Uloge članova**\n"
+"Samo članovi koji mogu vidjeti i pridružiti se AutoRoom izvoru moći će se "
+"pridružiti njegovim rezultirajućim AutoRoomima. Ako želite ograničiti "
+"AutoRoome tako da dopušta samo određene članove, jednostavno zabranite "
+"everyone ulozi da vidi/povezuje se na AutoRoom izvor i dopustite ulogama "
+"članova da vide/povezuju se na njega.\n"
+"\n"
+"**Dozvole**\n"
+"Sva prepisivanja dozvola (osim za Upravljanje ulogama) bit će kopirana iz "
+"AutoRoom izvora u rezultirajući AutoRoom. Savko prepisivanje dozvola koje "
+"želite, bez obzira je li dopušteno ili odbijeno, mora biti dopušteno za "
+"bota. Može biti dopušteno za bota u odredišnoj kategoriji ili u cijelom "
+"serveru s ulogama koje ima. `[p]autoroomset permissions` će prikazati koje "
+"dozvole će se kopirati."
 
 #: autoroom/c_autoroomset.py:821
 msgid "Check all permissions for all AutoRooms in a guild."
