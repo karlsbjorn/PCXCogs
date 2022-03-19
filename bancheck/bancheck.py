@@ -10,6 +10,7 @@ from redbot.core.utils.predicates import MessagePredicate
 from .pcx_lib import checkmark, delete
 from .services.imgur import Imgur
 from .services.ksoftsi import KSoftSi
+from .services.ravy import Ravy
 
 
 class BanCheck(commands.Cog):
@@ -24,7 +25,7 @@ class BanCheck(commands.Cog):
     """
 
     __author__ = "PhasecoreX"
-    __version__ = "2.2.0"
+    __version__ = "2.3.0"
 
     default_global_settings = {"schema_version": 0, "total_bans": 0}
     default_guild_settings: Any = {
@@ -32,7 +33,7 @@ class BanCheck(commands.Cog):
         "total_bans": 0,
         "services": {},
     }
-    supported_global_services = {"ksoftsi": KSoftSi}
+    supported_global_services = {"ksoftsi": KSoftSi, "ravy": Ravy}
     supported_guild_services = {}
     all_supported_services = {**supported_global_services, **supported_guild_services}
 
@@ -802,7 +803,8 @@ class BanCheck(commands.Cog):
                 repeatedly_joining = bucket.update_rate_limit()
                 if not repeatedly_joining:
                     embed = await self._user_lookup(member.guild, member, do_ban=True)
-                    await self.send_embed(channel, embed)
+                    if embed:
+                        await self.send_embed(channel, embed)
 
     async def _user_lookup(
         self,
