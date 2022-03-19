@@ -468,24 +468,33 @@ class AutoRoomSetCommands(MixinMeta):
             good_permissions, details = self.check_perms_source_dest(
                 autoroom_source, dest_category, detailed=True
             )
-            message = f"**{autoroom_source.mention}** will now create new AutoRooms in the **{dest_category.mention}** category."
+            message = _(
+                "**{autoroom_source}** will now create new AutoRooms in the **{dest_category}** category."
+            ).format(
+                autoroom_source=autoroom_source.mention,
+                dest_category=dest_category.mention,
+            )
             if good_permissions:
                 await ctx.send(checkmark(message))
             else:
                 await ctx.send(
                     warning(
-                        f"{message}"
-                        "\n"
-                        "Do note, this new category does not have sufficient permissions for me to make AutoRooms. "
-                        "Until you fix this, the AutoRoom Source will not work."
-                        "\n"
-                        f"{details}"
+                        _(
+                            "{message}"
+                            "\n"
+                            "Do note, this new category does not have sufficient permissions for me to make AutoRooms. "
+                            "Until you fix this, the AutoRoom Source will not work."
+                            "\n"
+                            "{details}"
+                        ).format(message=message, details=details)
                     )
                 )
         else:
             await ctx.send(
                 error(
-                    f"**{autoroom_source.mention}** is not an AutoRoom Source channel."
+                    _(
+                        "**{autoroom_source}** is not an AutoRoom Source channel."
+                    ).format(autoroom_source=autoroom_source.mention)
                 )
             )
 
