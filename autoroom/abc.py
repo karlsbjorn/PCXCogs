@@ -10,7 +10,7 @@ from autoroom.pcx_template import Template
 
 
 class MixinMeta(ABC):
-    """Base class for well behaved type hint detection with composite class.
+    """Base class for well-behaved type hint detection with composite class.
 
     Basically, to keep developers sane when not all attributes are defined in each mixin.
     """
@@ -48,7 +48,6 @@ class MixinMeta(ABC):
         autoroom_source: discord.VoiceChannel,
         category_dest: discord.CategoryChannel,
         with_manage_roles_guild=False,
-        with_text_channel=False,
         with_optional_clone_perms=False,
         split_required_optional_check=False,
         detailed=False,
@@ -72,9 +71,14 @@ class MixinMeta(ABC):
     def check_if_member_or_role_allowed(
         channel: discord.VoiceChannel,
         member_or_role: Union[discord.Member, discord.Role],
+        check_guild_role_perms: bool = False,
     ):
         raise NotImplementedError()
 
     @abstractmethod
     def get_member_roles(self, autoroom_source: discord.VoiceChannel):
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def get_bot_roles(self, guild: discord.guild):
         raise NotImplementedError()

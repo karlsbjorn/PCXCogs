@@ -3,6 +3,7 @@ from abc import ABC
 from typing import Union
 
 import discord
+from discord import ActivityType
 from redbot.core import Config, commands
 from redbot.core.utils.chat_formatting import humanize_timedelta
 from redbot.core.i18n import Translator, cog_i18n
@@ -38,19 +39,17 @@ class AutoRoom(
     """
 
     __author__ = "PhasecoreX"
-    __version__ = "3.3.0"
+    __version__ = "3.4.0"
 
     default_global_settings = {"schema_version": 0}
     default_guild_settings = {
         "admin_access": True,
-        "admin_access_text": False,
         "mod_access": False,
-        "mod_access_text": False,
+        "bot_access": [],
     }
     default_autoroom_source_settings = {
         "dest_category_id": None,
         "room_type": "public",
-        "text_channel": False,
         "text_channel_hint": None,
         "channel_name_type": "username",
         "channel_name_format": "",
@@ -62,24 +61,17 @@ class AutoRoom(
     }
     extra_channel_name_change_delay = 4
 
-    perms_public = {"connect": True, "view_channel": True}
-    perms_locked = {"connect": False, "view_channel": True}
-    perms_private = {"connect": False, "view_channel": False}
+    perms_public = {"view_channel": True, "connect": True, "send_messages": True}
+    perms_locked = {"view_channel": True, "connect": False, "send_messages": False}
+    perms_private = {"view_channel": False, "connect": False, "send_messages": False}
 
-    perms_autoroom_owner = {**perms_public, "manage_channels": True}
-    perms_bot_source = {**perms_public, "move_members": True}
-    perms_bot_dest = {**perms_autoroom_owner, "move_members": True}
-
-    perms_text = ["read_message_history", "read_messages"]
-    perms_text_allow = dict.fromkeys(perms_text, True)
-    perms_text_deny = dict.fromkeys(perms_text, False)
-    perms_text_reset = dict.fromkeys(perms_text, None)
-    perms_autoroom_owner_text = {
-        **perms_text_allow,
+    perms_bot_source = {"view_channel": True, "connect": True, "move_members": True}
+    perms_autoroom_owner = {
+        **perms_public,
         "manage_channels": True,
         "manage_messages": True,
     }
-    perms_bot_dest_text = perms_autoroom_owner_text
+    perms_bot_dest = {**perms_autoroom_owner, "move_members": True}
 
     def __init__(self, bot):
         """Set up the cog."""
@@ -176,8 +168,6 @@ class AutoRoom(
                         "room_type": avc_settings["room_type"],
                     }
                     # The rest of these were optional
-                    if "text_channel" in avc_settings:
-                        new_dict["text_channel"] = avc_settings["text_channel"]
                     if "channel_name_type" in avc_settings:
                         new_dict["channel_name_type"] = avc_settings[
                             "channel_name_type"
@@ -259,6 +249,23 @@ class AutoRoom(
                     ).clear_raw("member_roles")
             await self.config.schema_version.set(6)
 
+        if schema_version < 7:
+            # Remove auto text channels
+            guild_dict = await self.config.all_guilds()
+            for guild_id in guild_dict.keys():
+                await self.config.guild_from_id(guild_id).clear_raw("admin_access_text")
+                await self.config.guild_from_id(guild_id).clear_raw("mod_access_text")
+            all_autoroom_sources = await self.config.custom("AUTOROOM_SOURCE").all()
+            for guild_id, guild_autoroom_sources in all_autoroom_sources.items():
+                for (
+                    avc_id,
+                    autoroom_source_config,
+                ) in guild_autoroom_sources.items():
+                    await self.config.custom(
+                        "AUTOROOM_SOURCE", guild_id, avc_id
+                    ).clear_raw("text_channel")
+            await self.config.schema_version.set(7)
+
     async def _cleanup_autorooms(self):
         """Remove non-existent AutoRooms from the config."""
         await self.bot.wait_until_ready()
@@ -266,8 +273,10 @@ class AutoRoom(
         for voice_channel_id, voice_channel_settings in voice_channel_dict.items():
             voice_channel = self.bot.get_channel(voice_channel_id)
             if voice_channel:
+                # Delete AutoRoom if it is empty
                 await self._process_autoroom_delete(voice_channel)
             else:
+                # AutoRoom has already been deleted, clean up text channel if it still exists
                 text_channel = self.bot.get_channel(
                     voice_channel_settings["associated_text_channel"]
                 )
@@ -292,12 +301,12 @@ class AutoRoom(
         if not isinstance(guild_channel, discord.VoiceChannel):
             return
         if await self.get_autoroom_source_config(guild_channel):
-            # AutoRoom Source was deleted
+            # AutoRoom Source was deleted, remove configuration
             await self.config.custom(
-                "AUTOROOM_SOURCE", guild_channel.guild.id, guild_channel.id
+                "AUTOROOM_SOURCE", str(guild_channel.guild.id), str(guild_channel.id)
             ).clear()
         else:
-            # AutoRoom was deleted
+            # AutoRoom was deleted, remove associated text channel if it exists
             text_channel_id = await self.config.channel(
                 guild_channel
             ).associated_text_channel()
@@ -322,16 +331,11 @@ class AutoRoom(
             return
         # If user left an AutoRoom, do cleanup
         if await self.get_autoroom_info(leaving.channel):
-            if not await self._process_autoroom_delete(leaving.channel):
-                # AutoRoom wasn't deleted, so update text channel perms
-                await self._process_autoroom_text_perms(leaving.channel)
+            await self._process_autoroom_delete(leaving.channel)
         # If user entered an AutoRoom Source channel, create new AutoRoom
         asc = await self.get_autoroom_source_config(joining.channel)
         if asc:
             await self._process_autoroom_create(joining.channel, asc, member)
-        # If user entered an AutoRoom, allow them into the associated text channel
-        if await self.get_autoroom_info(joining.channel):
-            await self._process_autoroom_text_perms(joining.channel)
 
     #
     # Private methods
@@ -432,8 +436,9 @@ class AutoRoom(
         if autoroom_source_config["room_type"] != "server":
             perms.update(member, self.perms_autoroom_owner)
 
-        # Admin/moderator overwrites
-        additional_allowed_roles = []
+        # Admin/moderator/bot overwrites
+        # Add bot roles to be allowed
+        additional_allowed_roles = await self.get_bot_roles(guild)
         if await self.config.guild(guild).mod_access():
             # Add mod roles to be allowed
             additional_allowed_roles += await self.bot.get_mod_roles(guild)
@@ -462,94 +467,31 @@ class AutoRoom(
             new_voice_channel, reason=_("AutoRoom: Move user to new AutoRoom.")
         )
 
-        # Create optional text channel
-        if autoroom_source_config["text_channel"]:
-            # Sanity check on required permissions
-            for perm_name in self.perms_bot_dest_text:
-                if not getattr(dest_perms, perm_name):
-                    return
-            # Generate overwrites
-            perms = Perms()
-            perms.update(guild.me, self.perms_bot_dest_text)
-            perms.update(guild.default_role, self.perms_text_deny)
-            if autoroom_source_config["room_type"] != "server":
-                perms.update(member, self.perms_autoroom_owner_text)
-            else:
-                perms.update(member, self.perms_text_allow)
-            # Admin/moderator overwrites
-            additional_allowed_roles_text = []
-            if await self.config.guild(guild).mod_access_text():
-                # Add mod roles to be allowed
-                additional_allowed_roles_text += await self.bot.get_mod_roles(guild)
-            if await self.config.guild(guild).admin_access_text():
-                # Add admin roles to be allowed
-                additional_allowed_roles_text += await self.bot.get_admin_roles(guild)
-            for role in additional_allowed_roles_text:
-                # Add all the mod/admin roles, if required
-                perms.update(role, self.perms_text_allow)
-            # Create text channel
-            new_text_channel = await guild.create_text_channel(
-                name=new_channel_name.replace("'s ", " "),
-                category=dest_category,
-                reason=_("AutoRoom: New text channel needed."),
-                overwrites=perms.overwrites,
-            )
-            await self.config.channel(new_voice_channel).associated_text_channel.set(
-                new_text_channel.id
-            )
-            if autoroom_source_config["text_channel_hint"]:
-                try:
-                    hint = self.template.render(
-                        autoroom_source_config["text_channel_hint"],
-                        self.get_template_data(member),
-                    )
-                    if hint:
-                        await new_text_channel.send(hint)
-                except RuntimeError:
-                    pass  # User manually screwed with the template
+        # TODO Once discord.py supports sending messages to the text chat in a voice channel, this can be enabled
+
+        # # Send text chat hint if enabled
+        # if autoroom_source_config["text_channel_hint"]:
+        #     try:
+        #         hint = self.template.render(
+        #             autoroom_source_config["text_channel_hint"],
+        #             self.get_template_data(member),
+        #         )
+        #         if hint:
+        #             await new_voice_channel.send(hint)
+        #     except RuntimeError:
+        #         pass  # User manually screwed with the template
 
     @staticmethod
     async def _process_autoroom_delete(voice_channel: discord.VoiceChannel):
         """Delete AutoRoom if empty."""
         if (
             not voice_channel.members
-            and voice_channel.guild.me.permissions_in(voice_channel).manage_channels
+            and voice_channel.permissions_for(voice_channel.guild.me).manage_channels
         ):
             try:
                 await voice_channel.delete(reason=_("AutoRoom: Channel empty."))
             except discord.NotFound:
                 pass  # Sometimes this happens when the user manually deletes their channel
-            return True
-        return False
-
-    async def _process_autoroom_text_perms(self, autoroom: discord.VoiceChannel):
-        """Allow or deny a user access to the text channel associated to an AutoRoom."""
-        text_channel_id = await self.config.channel(autoroom).associated_text_channel()
-        text_channel = (
-            autoroom.guild.get_channel(text_channel_id) if text_channel_id else None
-        )
-        if not text_channel:
-            return
-
-        overwrites = dict(text_channel.overwrites)
-        perms = Perms(overwrites)
-        # Remove read perms for users not in autoroom
-        for member in overwrites:
-            if (
-                isinstance(member, discord.Member)
-                and member not in autoroom.members
-                and member != autoroom.guild.me
-            ):
-                perms.update(member, self.perms_text_reset)
-        # Add read perms for users in autoroom
-        for member in autoroom.members:
-            perms.update(member, self.perms_text_allow)
-        # Edit channel if overwrites were modified
-        if perms.modified:
-            await text_channel.edit(
-                overwrites=perms.overwrites,
-                reason=_("AutoRoom: Permission change"),
-            )
 
     def _generate_channel_name(
         self,
@@ -600,7 +542,7 @@ class AutoRoom(
         """Return a dict of template data based on a member."""
         data = {"username": member.display_name}
         for activity in member.activities:
-            if activity.type.value == 0:
+            if activity.type == ActivityType.playing:
                 data["game"] = activity.name
                 break
         return data
@@ -642,7 +584,6 @@ class AutoRoom(
         autoroom_source: discord.VoiceChannel,
         category_dest: discord.CategoryChannel,
         with_manage_roles_guild=False,
-        with_text_channel=False,
         with_optional_clone_perms=False,
         split_required_optional_check=False,
         detailed=False,
@@ -663,9 +604,6 @@ class AutoRoom(
                 and category_dest.guild.me.guild_permissions.manage_roles
             )
         # Optional
-        if with_text_channel:
-            for perm_name in self.perms_bot_dest_text:
-                result_optional = result_optional and getattr(dest, perm_name)
         clone_section = None
         if with_optional_clone_perms:
             if detailed:
@@ -704,16 +642,6 @@ class AutoRoom(
             )
             autoroom_sections.append(guild_section)
 
-        if with_text_channel:
-            text_section = SettingDisplay(
-                _("Optional on Destination Category (for text channel)")
-            )
-            for perm_name in self.perms_bot_dest_text:
-                text_section.add(
-                    perm_name.capitalize().replace("_", " "), getattr(dest, perm_name)
-                )
-            autoroom_sections.append(text_section)
-
         if clone_section:
             autoroom_sections.append(clone_section)
 
@@ -750,8 +678,10 @@ class AutoRoom(
         )
         for permissions in source_overwrites.values():
             # We can't put manage_roles in overwrites, so just get rid of it
-            # Also get rid of view_channel and connect, as we will be controlling those
-            permissions.update(connect=None, manage_roles=None, view_channel=None)
+            # Also get rid of view_channel, connect, and send_messages, as we will be controlling those
+            permissions.update(
+                connect=None, manage_roles=None, view_channel=None, send_messages=None
+            )
             # Check each permission for each overwrite target to make sure the bot has it allowed in the dest category
             for name, value in permissions:
                 if value is not None and name not in checked_perms:
@@ -798,7 +728,7 @@ class AutoRoom(
         if not autoroom_source:
             return None
         config = await self.config.custom(
-            "AUTOROOM_SOURCE", autoroom_source.guild.id, autoroom_source.id
+            "AUTOROOM_SOURCE", str(autoroom_source.guild.id), str(autoroom_source.id)
         ).all()  # Returns default values
         if not config["dest_category_id"]:
             return None
@@ -816,8 +746,14 @@ class AutoRoom(
     def check_if_member_or_role_allowed(
         channel: discord.VoiceChannel,
         member_or_role: Union[discord.Member, discord.Role],
+        check_guild_role_perms: bool = False,
     ):
-        """Check if a member/role is allowed to view and connect to a voice channel."""
+        """Check if a member/role is allowed to view and connect to a voice channel.
+
+        For roles, it only checks that they aren't specifically denied with channel overwrites.
+        If check_guild_role_perms is True, it will additionally check the combination of
+        channel overwrites and guild permissions if they would prevent connecting to the channel.
+        """
         if isinstance(member_or_role, discord.Member):
             return (
                 channel.permissions_for(member_or_role).connect
@@ -828,36 +764,60 @@ class AutoRoom(
                 overwrites_allow, overwrites_deny = channel.overwrites[
                     member_or_role
                 ].pair()
-                if (
-                    overwrites_deny.connect
-                    or overwrites_deny.view_channel
-                    or (
+                if overwrites_deny.connect or overwrites_deny.view_channel:
+                    return False
+                if check_guild_role_perms:
+                    if (
                         not overwrites_allow.connect
                         and not member_or_role.permissions.connect
-                    )
-                    or (
+                    ) or (
                         not overwrites_allow.view_channel
                         and not member_or_role.permissions.view_channel
-                    )
-                ):
-                    return False
+                    ):
+                        return False
                 else:
                     return True
-            return (
-                member_or_role.permissions.connect
-                and member_or_role.permissions.view_channel
-            )
+            if check_guild_role_perms:
+                return (
+                    member_or_role.permissions.connect
+                    and member_or_role.permissions.view_channel
+                )
+            else:
+                return True
         return False
 
     def get_member_roles(self, autoroom_source: discord.VoiceChannel):
         """Get member roles set on an AutoRoom Source."""
         member_roles = []
-        # If @everyone is allowed to connect to source channel, there are no member roles
+        # If @everyone is allowed to view and connect to the source channel, there are no member roles
         if not self.check_if_member_or_role_allowed(
-            autoroom_source, autoroom_source.guild.default_role
+            autoroom_source,
+            autoroom_source.guild.default_role,
+            check_guild_role_perms=True,
         ):
             # If it isn't allowed, then member roles are being used
             for role, overwrite in autoroom_source.overwrites.items():
-                if isinstance(role, discord.Role) and overwrite.pair()[0].connect:
+                if (
+                    isinstance(role, discord.Role)
+                    and role != autoroom_source.guild.default_role
+                    and overwrite.pair()[0].connect
+                ):
                     member_roles.append(role)
         return member_roles
+
+    async def get_bot_roles(self, guild: discord.Guild):
+        """Get the additional bot roles that are added to each AutoRoom."""
+        bot_roles = []
+        bot_role_ids = []
+        some_roles_were_not_found = False
+        for bot_role_id in await self.config.guild(guild).bot_access():
+            bot_role = guild.get_role(bot_role_id)
+            if bot_role:
+                bot_roles.append(bot_role)
+                bot_role_ids.append(bot_role_id)
+            else:
+                some_roles_were_not_found = True
+        if some_roles_were_not_found:
+            # Update the bot role list to remove nonexistent roles
+            await self.config.guild(guild).bot_access.set(bot_role_ids)
+        return bot_roles
