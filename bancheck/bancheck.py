@@ -1,14 +1,12 @@
 """BanCheck cog for Red-DiscordBot ported and enhanced by PhasecoreX."""
-import asyncio
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, Union
 
 import discord
 from redbot.core import Config, checks, commands
-from redbot.core.utils.chat_formatting import error, info, question, warning
-from redbot.core.utils.predicates import MessagePredicate
+from redbot.core.utils.chat_formatting import error, info, warning
 
 from .pcx_lib import checkmark, delete
-from .services.imgur import Imgur
+from .services.antiraid import Antiraid
 from .services.ksoftsi import KSoftSi
 from .services.ravy import Ravy
 
@@ -25,7 +23,7 @@ class BanCheck(commands.Cog):
     """
 
     __author__ = "PhasecoreX"
-    __version__ = "2.3.0"
+    __version__ = "2.5.0"
 
     default_global_settings = {"schema_version": 0, "total_bans": 0}
     default_guild_settings: Any = {
@@ -33,7 +31,7 @@ class BanCheck(commands.Cog):
         "total_bans": 0,
         "services": {},
     }
-    supported_global_services = {"ksoftsi": KSoftSi, "ravy": Ravy}
+    supported_global_services = {"antiraid": Antiraid, "ksoftsi": KSoftSi, "ravy": Ravy}
     supported_guild_services = {}
     all_supported_services = {**supported_global_services, **supported_guild_services}
 
@@ -160,12 +158,17 @@ class BanCheck(commands.Cog):
         )
         enabled_services = ""
         disabled_services = ""
-        for service_name in self.supported_global_services:
+        for service_name, service_class in self.supported_global_services.items():
             if await self.get_api_key(service_name):
                 enabled_services += (
                     f"{await self.format_service_name_url(service_name)}\n"
                 )
             else:
+                try:
+                    if service_class().HIDDEN:
+                        continue
+                except AttributeError:
+                    pass  # This service is not hidden
                 disabled_services += (
                     f"{await self.format_service_name_url(service_name, True)}\n"
                 )
@@ -366,7 +369,7 @@ class BanCheck(commands.Cog):
         disabled_services = ""
         disabled_services_api = ""
         disabled_services_global_api = ""
-        for service_name in self.all_supported_services:
+        for service_name, service_class in self.all_supported_services.items():
             api_key = await self.get_api_key(service_name, config_services)
             enabled = config_services.get(service_name, {}).get("enabled", False)
             show_help = service_name in self.supported_guild_services and not api_key
@@ -381,10 +384,16 @@ class BanCheck(commands.Cog):
                 enabled_services_api += service_name_formatted
             elif api_key:
                 disabled_services += service_name_formatted
-            elif service_name in self.supported_global_services:
-                disabled_services_global_api += service_name_formatted
             else:
-                disabled_services_api += service_name_formatted
+                try:
+                    if service_class().HIDDEN:
+                        continue
+                except AttributeError:
+                    pass  # This service is not hidden
+                if service_name in self.supported_global_services:
+                    disabled_services_global_api += service_name_formatted
+                else:
+                    disabled_services_api += service_name_formatted
         if enabled_services:
             embed.add_field(
                 name=checkmark("Enabled Services"), value=enabled_services, inline=False
@@ -600,180 +609,6 @@ class BanCheck(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    # Only the owner for now, until I do some research on whom to open it up to
-    @checks.is_owner()
-    # @checks.admin_or_permissions(ban_members=True)
-    async def banreport(
-        self,
-        ctx: commands.Context,
-        member: Union[discord.Member, int],
-        *,
-        ban_message: str,
-    ):
-        """Send a ban report to all enabled global ban lists.
-
-        This command can only be run as a comment on an uploaded image (ban proof).
-        """
-        if not ctx.message.attachments or not ctx.message.attachments[0].height:
-            await ctx.send_help()
-            return
-        proof_image_url = ctx.message.attachments[0].url
-        await self._user_report(ctx, proof_image_url, True, member, ban_message)
-
-    @commands.command()
-    @commands.guild_only()
-    # Only the owner for now, until I do some research on whom to open it up to
-    @checks.is_owner()
-    # @checks.admin_or_permissions(ban_members=True)
-    async def banreportmanual(
-        self,
-        ctx: commands.Context,
-        member: Union[discord.Member, int],
-        proof_image_url: str,
-        *,
-        ban_message: str,
-    ):
-        """Send a ban report to all enabled global ban lists.
-
-        This command requires an uploaded image URL (ban proof).
-        If you want to upload an image via Discord,
-        use the [p]banreport command instead.
-        """
-        await self._user_report(ctx, proof_image_url, False, member, ban_message)
-
-    async def _user_report(
-        self,
-        ctx: commands.Context,
-        image_proof_url: str,
-        do_imgur_upload: bool,
-        member: Union[discord.Member, int],
-        ban_message: str,
-    ):
-        """Perform user report."""
-        description = ""
-        sent: List[str] = []
-        is_error = False
-        config_services = await self.config.guild(ctx.guild).services()
-        if isinstance(member, discord.Member):
-            member_id = member.id
-            member_avatar_url = member.avatar_url
-        else:
-            member_id = member
-            member_avatar_url = None
-
-        # Gather services that can have reports sent to them
-        report_services = []
-        for service_name, service_config in config_services.items():
-            if not service_config.get("enabled", False):
-                continue  # This service is not enabled
-            service_class = self.all_supported_services.get(service_name, None)
-            if not service_class:
-                continue  # This service is not supported
-            try:
-                service_class().report
-            except AttributeError:
-                continue  # This service does not support reporting
-            api_key = await self.get_api_key(service_name, config_services)
-            if not api_key:
-                continue  # This service needs an API key set to work
-            report_services.append((service_class(), api_key))
-
-        # Send error if there are no services to send to
-        if not report_services:
-            await self.send_embed(
-                ctx,
-                self.embed_maker(
-                    "Error",
-                    discord.Colour.red(),
-                    "No services have been set up. Please check `[p]bancheckset service settings` for more details.",
-                    member_avatar_url,
-                ),
-            )
-            return
-
-        # Upload to Imgur if needed
-        if do_imgur_upload:
-            service_keys = await self.bot.get_shared_api_tokens("imgur")
-            imgur_client_id = service_keys.get("client_id", False)
-            if not imgur_client_id:
-                await ctx.send(
-                    error(
-                        "This command requires that you have an Imgur Client ID. Please set one with `.imgurcreds`."
-                    )
-                )
-                return
-            image_proof_url = await Imgur.upload(image_proof_url, imgur_client_id)
-            if not image_proof_url:
-                await ctx.send(
-                    error(
-                        "Uploading image to Imgur failed. Ban report has not been sent."
-                    )
-                )
-                return
-
-        # Ask if the user really wants to do this
-        pred = MessagePredicate.yes_or_no(ctx)
-        await ctx.send(
-            question(
-                f"Are you **sure** you want to send this ban report for **{member}**? (yes/no)"
-            )
-        )
-        try:
-            await ctx.bot.wait_for("message", check=pred, timeout=30)
-        except asyncio.TimeoutError:
-            pass
-        if pred.result:
-            pass
-        else:
-            await ctx.send(error("Sending ban report has been canceled."))
-            return
-
-        # Send report to services
-        for report_service_tuple in report_services:
-            response = await report_service_tuple[0].report(
-                member_id,
-                report_service_tuple[1],
-                ctx.author.id,
-                ban_message,
-                image_proof_url,
-            )
-            sent.append(response.service)
-            if response.result and response.reason:
-                description += checkmark(
-                    f"**{response.service}:** Sent ({response.reason})\n"
-                )
-            elif response.result:
-                description += checkmark(f"**{response.service}:** Sent\n")
-            else:
-                is_error = True
-                description += error(
-                    f"**{response.service}:** Failure ({response.reason if response.reason else 'No reason given'})\n"
-                )
-
-        # Generate results
-        if is_error:
-            await self.send_embed(
-                ctx,
-                self.embed_maker(
-                    f"Errors occurred while sending reports for **{member}**",
-                    discord.Colour.red(),
-                    description,
-                    member_avatar_url,
-                ),
-            )
-        else:
-            await self.send_embed(
-                ctx,
-                self.embed_maker(
-                    f"Reports sent for **{member}**",
-                    discord.Colour.green(),
-                    f"Services: {', '.join(sent)}",
-                    member_avatar_url,
-                ),
-            )
-
-    @commands.command()
-    @commands.guild_only()
     @checks.admin_or_permissions(ban_members=True)
     async def bancheck(
         self, ctx: commands.Context, member: Union[discord.Member, int] = None
@@ -842,37 +677,41 @@ class BanCheck(commands.Cog):
                 service_class().lookup
             except AttributeError:
                 continue  # This service does not support lookup
-            response = await service_class().lookup(member_id, api_key)
-            checked.append(response.service)
 
-            if response.result == "ban":
-                banned_services[response.service] = response.reason
-                if do_ban and autoban:
-                    auto_banned = True
+            responses = await service_class().lookup(member_id, api_key)
+            if not isinstance(responses, list):
+                responses = [responses]
+            for response in responses:
+                checked.append(response.service)
 
-                proof = " (No proof provided)"
-                if response.proof_url:
-                    proof = f" ([proof]({response.proof_url}))"
+                if response.result == "ban":
+                    banned_services[response.service] = response.reason
+                    if do_ban and autoban:
+                        auto_banned = True
 
-                description += error(
-                    f"**{response.service}:** {response.reason}{proof}\n"
-                )
+                    proof = " (No proof provided)"
+                    if response.proof_url:
+                        proof = f" ([proof]({response.proof_url}))"
 
-            elif response.result == "clear":
-                description += checkmark(f"**{response.service}:** No ban found\n")
+                    description += error(
+                        f"**{response.service}:** {response.reason}{proof}\n"
+                    )
 
-            elif response.result == "error":
-                is_error = True
-                description += warning(
-                    f"**{response.service}:** Error - {response.reason if response.reason else 'No reason given'}\n"
-                )
+                elif response.result == "clear":
+                    description += checkmark(f"**{response.service}:** No ban found\n")
 
-            else:
-                is_error = True
-                description += warning(
-                    f"**{response.service}:** Fatal Error - "
-                    f"You should probably let PhasecoreX know about this -> `{response.result}`.\n"
-                )
+                elif response.result == "error":
+                    is_error = True
+                    description += warning(
+                        f"**{response.service}:** Error - {response.reason if response.reason else 'No reason given'}\n"
+                    )
+
+                else:
+                    is_error = True
+                    description += warning(
+                        f"**{response.service}:** Fatal Error - "
+                        f"You should probably let PhasecoreX know about this -> `{response.result}`.\n"
+                    )
 
         # Display result
         if banned_services:

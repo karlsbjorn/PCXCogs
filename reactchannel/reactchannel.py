@@ -1,13 +1,13 @@
 """ReactChannel cog for Red-DiscordBot by PhasecoreX."""
 import datetime
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 import discord
 from redbot.core import Config, checks, commands
 from redbot.core.utils import AsyncIter
 from redbot.core.utils.chat_formatting import box, error, warning
 
-from .pcx_lib import checkmark, delete
+from .pcx_lib import checkmark, delete, message_splitter
 
 
 class ReactChannel(commands.Cog):
@@ -272,7 +272,7 @@ class ReactChannel(commands.Cog):
         if not message:
             message = " None"
         message = "**ReactChannels configured:**\n" + message
-        await ctx.send(message)
+        await message_splitter(message, ctx)
 
     @reactchannelset.group()
     async def enable(self, ctx: commands.Context):
@@ -989,7 +989,7 @@ class ReactChannel(commands.Cog):
                 await member.created_at.set(time)
 
     @staticmethod
-    def _list_roles(guild: discord.Guild, role_ids: list[int]):
+    def _list_roles(guild: discord.Guild, role_ids: List[int]):
         result = ""
         for role_id in role_ids:
             role = guild.get_role(role_id)
