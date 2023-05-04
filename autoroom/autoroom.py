@@ -355,7 +355,7 @@ class AutoRoom(
         dest_category = guild.get_channel(autoroom_source_config["dest_category_id"])
         if not isinstance(dest_category, discord.CategoryChannel):
             return
-        required_check, optional_check, _ = self.check_perms_source_dest(
+        required_check, optional_check, __ = self.check_perms_source_dest(
             autoroom_source, dest_category
         )
         if not required_check or not optional_check:
