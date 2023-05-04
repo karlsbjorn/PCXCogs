@@ -363,8 +363,6 @@ class AutoRoom(
 
         # Check that user isn't spamming
         bucket = self.bucket_autoroom_create.get_bucket(member)
-                            await member.send(_(
-                            ))
         if bucket:
             retry_after = bucket.update_rate_limit()
             if retry_after:
