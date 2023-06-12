@@ -5,13 +5,13 @@ from contextlib import suppress
 
 import discord
 from redbot.core import checks, commands
-from redbot.core.utils.chat_formatting import error, info, warning
+from redbot.core.utils.chat_formatting import error, info, success, warning
 from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
 from redbot.core.utils.predicates import MessagePredicate
 from redbot.core.i18n import Translator
 
 from .abc import MixinMeta
-from .pcx_lib import SettingDisplay, checkmark
+from .pcx_lib import SettingDisplay
 
 _ = Translator("AutoRoom", __file__)
 
@@ -174,7 +174,7 @@ class AutoRoomSetCommands(MixinMeta, ABC):
                 ))
             )
         else:
-            await ctx.send(checkmark(_("Everything looks good here!")))
+            await ctx.send(success("Everything looks good here!"))
 
         if len(details_list) > 1:
             if (
@@ -205,10 +205,8 @@ class AutoRoomSetCommands(MixinMeta, ABC):
         admin_access = not await self.config.guild(ctx.guild).admin_access()
         await self.config.guild(ctx.guild).admin_access.set(admin_access)
         await ctx.send(
-            checkmark(
-                _(
-                    "Admins are {now_or_no_longer} able to join (new) locked/private AutoRooms."
-                ).format(now_or_no_longer=_("now") if admin_access else _("no longer"))
+            success(
+                f"Admins are {'now' if admin_access else 'no longer'} able to join (new) locked/private AutoRooms."
             )
         )
 
@@ -220,10 +218,8 @@ class AutoRoomSetCommands(MixinMeta, ABC):
         mod_access = not await self.config.guild(ctx.guild).mod_access()
         await self.config.guild(ctx.guild).mod_access.set(mod_access)
         await ctx.send(
-            checkmark(
-                _(
-                    "Moderators are {now_or_no_longer} able to join (new) locked/private AutoRooms."
-                ).format(now_or_no_longer=_("now") if mod_access else _("no longer"))
+            success(
+                f"Moderators are {'now' if mod_access else 'no longer'} able to join (new) locked/private AutoRooms."
             )
         )
 
@@ -248,7 +244,7 @@ class AutoRoomSetCommands(MixinMeta, ABC):
             [role.name for role in await self.get_bot_roles(ctx.guild)]
         )
         await ctx.send(
-            checkmark(
+            success(
                 f"AutoRooms will now allow the following bot roles in by default:\n\n{role_list}"
             )
         )
@@ -270,13 +266,13 @@ class AutoRoomSetCommands(MixinMeta, ABC):
                 [role.name for role in await self.get_bot_roles(ctx.guild)]
             )
             await ctx.send(
-                checkmark(
+                success(
                     f"AutoRooms will now allow the following bot roles in by default:\n\n{role_list}"
                 )
             )
         else:
             await ctx.send(
-                checkmark("New AutoRooms will not allow any extra bot roles in.")
+                success("New AutoRooms will not allow any extra bot roles in.")
             )
 
     @autoroomset.command(aliases=["enable", "add"])
@@ -350,7 +346,7 @@ class AutoRoomSetCommands(MixinMeta, ABC):
         with suppress(asyncio.TimeoutError):
             await ctx.bot.wait_for("message", check=pred, timeout=60)
             answer = pred.result
-        if answer in options:
+        if answer is not None:
             new_source["room_type"] = options[answer]
         else:
             await ctx.send("No valid answer was received, canceling setup process.")
@@ -394,7 +390,7 @@ class AutoRoomSetCommands(MixinMeta, ABC):
         with suppress(asyncio.TimeoutError):
             await ctx.bot.wait_for("message", check=pred, timeout=60)
             answer = pred.result
-        if answer in options:
+        if answer is not None:
             new_source["channel_name_type"] = options[answer]
         else:
             await ctx.send("No valid answer was received, canceling setup process.")
@@ -405,12 +401,10 @@ class AutoRoomSetCommands(MixinMeta, ABC):
             "AUTOROOM_SOURCE", str(ctx.guild.id), str(source_voice_channel.id)
         ).set(new_source)
         await ctx.send(
-            checkmark(
-                _(
-                    "Settings saved successfully!\n"
-                    "Check out `[p]autoroomset modify` for even more AutoRoom Source settings, "
-                    "or to make modifications to your above answers."
-                )
+            success(
+                "Settings saved successfully!\n"
+                "Check out `[p]autoroomset modify` for even more AutoRoom Source settings, "
+                "or to make modifications to your above answers."
             )
         )
 
@@ -427,10 +421,8 @@ class AutoRoomSetCommands(MixinMeta, ABC):
             "AUTOROOM_SOURCE", str(ctx.guild.id), str(autoroom_source.id)
         ).clear()
         await ctx.send(
-            checkmark(
-                _(
-                    "**{source_channel}** is no longer an AutoRoom Source channel."
-                ).format(source_channel=autoroom_source.mention)
+            success(
+                f"**{autoroom_source.mention}** is no longer an AutoRoom Source channel."
             )
         )
 
@@ -457,7 +449,7 @@ class AutoRoomSetCommands(MixinMeta, ABC):
             )
             message = f"**{autoroom_source.mention}** will now create new AutoRooms in the **{dest_category.mention}** category."
             if perms_required and perms_optional:
-                await ctx.send(checkmark(message))
+                await ctx.send(success(message))
             else:
                 await ctx.send(
                     warning(
@@ -526,12 +518,8 @@ class AutoRoomSetCommands(MixinMeta, ABC):
                 "AUTOROOM_SOURCE", str(ctx.guild.id), str(autoroom_source.id)
             ).room_type.set(room_type)
             await ctx.send(
-                checkmark(
-                    _(
-                        "**{source_channel}** will now create `{room_type}` AutoRooms."
-                    ).format(
-                        source_channel=autoroom_source.mention, room_type=room_type
-                    )
+                success(
+                    f"**{autoroom_source.mention}** will now create `{room_type}` AutoRooms."
                 )
             )
         else:
@@ -615,14 +603,12 @@ class AutoRoomSetCommands(MixinMeta, ABC):
                 except RuntimeError as rte:
                     await ctx.send(
                         error(
-                            _(
-                                "Hmm... that doesn't seem to be a valid template:"
-                                "\n\n"
-                                "`{runtime_error}`"
-                                "\n\n"
-                                "If you need some help, take a look at "
-                                "[the readme](https://github.com/PhasecoreX/PCXCogs/tree/master/autoroom/README.md)."
-                            ).format(runtime_error=str(rte))
+                            "Hmm... that doesn't seem to be a valid template:"
+                            "\n\n"
+                            f"`{rte!s}`"
+                            "\n\n"
+                            "If you need some help, take a look at "
+                            "[the readme](https://github.com/PhasecoreX/PCXCogs/tree/master/autoroom/README.md)."
                         )
                     )
                     return
@@ -655,7 +641,7 @@ class AutoRoomSetCommands(MixinMeta, ABC):
                 message += (
                     f"\n{self.format_template_room_name(template, data, room_num)}"
                 )
-            await ctx.send(checkmark(message))
+            await ctx.send(success(message))
         else:
             await ctx.send(
                 error(
@@ -685,6 +671,12 @@ class AutoRoomSetCommands(MixinMeta, ABC):
         This can have template variables and statements, which you can learn more
         about by looking at `[p]autoroomset modify name custom`, or by looking at
         [the readme](https://github.com/PhasecoreX/PCXCogs/tree/master/autoroom/README.md).
+
+        The only additional variable that may be useful here is the `mention` variable,
+        which will insert the users mention (pinging them).
+
+        - Example:
+        `Hello {{mention}}! Welcome to your new AutoRoom!`
         """
         if not ctx.guild:
             return
@@ -698,7 +690,7 @@ class AutoRoomSetCommands(MixinMeta, ABC):
                     error(
                         "Hmm... that doesn't seem to be a valid template:"
                         "\n\n"
-                        f"`{str(rte)}`"
+                        f"`{rte!s}`"
                         "\n\n"
                         "If you need some help, take a look at "
                         "[the readme](https://github.com/PhasecoreX/PCXCogs/tree/master/autoroom/README.md)."
@@ -711,7 +703,7 @@ class AutoRoomSetCommands(MixinMeta, ABC):
             ).text_channel_hint.set(hint_text)
 
             await ctx.send(
-                checkmark(
+                success(
                     f"New AutoRooms created by **{autoroom_source.mention}** will have the following message sent in them:"
                     "\n\n"
                     f"{hint_text_formatted}"
@@ -738,7 +730,7 @@ class AutoRoomSetCommands(MixinMeta, ABC):
                 "AUTOROOM_SOURCE", str(ctx.guild.id), str(autoroom_source.id)
             ).text_channel_hint.clear()
             await ctx.send(
-                checkmark(
+                success(
                     f"New AutoRooms created by **{autoroom_source.mention}** will no longer have a message sent in them."
                 )
             )

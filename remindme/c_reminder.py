@@ -70,14 +70,14 @@ class ReminderCommands(MixinMeta, ABC):
             color=await ctx.embed_color(),
         )
         embed.set_thumbnail(url=author.display_avatar.url)
-        for reminder in user_reminders:  # TODO make this look nicer.
+        for reminder in user_reminders:
             reminder_title = (
                 f"ID# {reminder['user_reminder_id']} — <t:{reminder['expires']}:f>"
             )
             if "repeat" in reminder and reminder["repeat"]:
                 reminder_title += f", repeating every {self.humanize_relativedelta(reminder['repeat'])}"
             reminder_text = reminder["text"]
-            if reminder["jump_link"]:
+            if reminder.get("jump_link"):
                 reminder_text += f"\n([original message]({reminder['jump_link']}))"
             reminder_text = reminder_text or "(no reminder text or jump link)"
             embed.add_field(
